@@ -19,7 +19,7 @@ public class Student {
     private String lastName;
     @Column(unique = true)
     private String email;
-    private LocalDate dob;   // date of birth
+    private LocalDate dateOfBirth;   // date of birth
     @Transient
     private Integer age;
 
@@ -28,11 +28,11 @@ public class Student {
     }
 
     // Constructor with Attributes
-    public Student(String firstName, String lastName, String email, LocalDate dob) {
+    public Student(String firstName, String lastName, String email, LocalDate dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.dob = dob;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Long getId() {
@@ -67,26 +67,26 @@ public class Student {
         this.email = email;
     }
 
-    public LocalDate getDob() {
-        return dob;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Integer getAge() {
-        return Period.between(this.dob, LocalDate.now()).getYears();
+        return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
     }
 
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
-                ", first_name='" + firstName + '\'' +
-                ", last_name='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", dob=" + dob +
+                ", dateOfBirth=" + dateOfBirth +
                 ", age=" + age +
                 '}';
     }
