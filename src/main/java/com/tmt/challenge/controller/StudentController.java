@@ -22,8 +22,8 @@ public class StudentController {
     }
 
     @PostMapping(path = "/create-new")
-    public StudentDTO addNewStudent(@RequestBody Student student) {
-        return studentService.addNewStudent(student);
+    public ResponseDTO addNewStudent(@RequestBody StudentWithBooksDTO studentWithBooks) {
+        return studentService.addNewStudent(studentWithBooks);
     }
 
     @GetMapping(path = "/get-all")

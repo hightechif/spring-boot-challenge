@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,10 +20,12 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepo studentRepo;
+    private final BookRepo bookRepo;
 
     @Autowired
-    public StudentService(StudentRepo studentRepo) {
+    public StudentService(StudentRepo studentRepo, BookRepo bookRepo) {
         this.studentRepo = studentRepo;
+        this.bookRepo = bookRepo;
     }
 
     // Convert to DTO;
@@ -40,31 +40,24 @@ public class StudentService {
     }
 
     // CREATE New Student
-    public StudentDTO addNewStudent(Student student) {
-        Optional<Student> studentOptional = studentRepo.findStudentByEmail(student.getEmail());
+    public ResponseDTO addNewStudent(StudentWithBooksDTO studentWithBooks) {
+        Optional<Student> studentOptional = studentRepo.findStudentByEmail(studentWithBooks.getEmail());
         if (studentOptional.isPresent()) {
             throw new IllegalStateException("email already exist");
         }
+
+        Student student = studentWithBooks.getStudent();
         studentRepo.save(student);
 
-//        List<String> bookNames = studentWithBooks.getBooks();
-//        bookNames.forEach(bookName -> {
-//            Book book = new Book();
-//            book.setBookName(bookName);
-//            book.setCreatedAt(new Timestamp(new Date().getTime()));
-//            book.setStudent(student);
-//            bookRepo.save(book);
-//        });
+        List<String> bookNames = studentWithBooks.getBooks();
+        bookNames.forEach(name -> {
+            Book book = new Book();
+            book.setBookName(name);
+            book.setStudent(student);
+            bookRepo.save(book);
+        });
 
-//        JSONObject result = new JSONObject();
-//        result.put("id", student.getId());
-//        result.put("firstName", student.getFirstName());
-//        result.put("lastName", student.getLastName());
-//        result.put("email", student.getEmail());
-//        result.put("age", student.getAge());
-//        result.put("books", bookNames);
-//        return result;
-        return convertToDTO(student);
+        return new ResponseDTO("Data Created");
     }
 
     // READ All Students
