@@ -51,19 +51,21 @@ public class StudentService {
     }
 
     // READ Student by ID
-    public Optional<StudentDTO> getStudentById(Long studentId) {
+    public StudentDTO getStudentById(Long studentId) {
         Optional<Student> studentOptional = studentRepo.findById(studentId);
         if (!studentOptional.isPresent()) {
             throw new IllegalStateException("student with id "+ studentId +" does not exist");
         }
-        Optional<StudentDTO> studentDTOOptional = Optional.of(convertToDTO(studentOptional.get()));
-        return studentDTOOptional;
+        return convertToDTO(studentOptional.get());
     }
 
     // READ Student by Email
     public StudentDTO getStudentByEmail(String email) {
-        Student student = studentRepo.getByEmail(email);
-        return convertToDTO(student);
+        Optional<Student> studentOptional = studentRepo.findStudentByEmail(email);
+        if (!studentOptional.isPresent()) {
+            throw new IllegalStateException("student with email "+ email +" does not exist");
+        }
+        return convertToDTO(studentOptional.get());
     }
 
     // UPDATE Student
