@@ -42,10 +42,10 @@ public class StudentController {
     }
 
     @PutMapping(path = "/edit/{studentId}")
-    public void updateStudent(@PathVariable("studentId") Long studentId,
+    public ResponseDTO updateStudent(@PathVariable("studentId") Long studentId,
                               @RequestParam(required = false) String firstName,
                               @RequestParam(required = false) String lastName) {
-        studentService.updateStudent(studentId, firstName, lastName);
+        return studentService.updateStudent(studentId, firstName, lastName);
     }
 
     @DeleteMapping(path = "/delete/{studentId}")
