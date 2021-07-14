@@ -2,16 +2,15 @@ package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.ResponseDTO;
 import com.tmt.challenge.dto.StudentDTO;
-import com.tmt.challenge.model.Student;
+import com.tmt.challenge.dto.StudentWithBooksDTO;
 import com.tmt.challenge.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/api/v1/student")
+@RequestMapping(path = "/api/v1/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -22,8 +21,8 @@ public class StudentController {
     }
 
     @PostMapping(path = "/create-new")
-    public StudentDTO addNewStudent(@RequestBody Student student) {
-        return studentService.addNewStudent(student);
+    public void addNewStudent(@RequestBody StudentWithBooksDTO studentWithBooks) {
+        studentService.addNewStudent(studentWithBooks);
     }
 
     @GetMapping(path = "/get-all")
@@ -43,8 +42,8 @@ public class StudentController {
 
     @PutMapping(path = "/edit/{studentId}")
     public ResponseDTO updateStudent(@PathVariable("studentId") Long studentId,
-                              @RequestParam(required = false) String firstName,
-                              @RequestParam(required = false) String lastName) {
+                                     @RequestParam(required = false) String firstName,
+                                     @RequestParam(required = false) String lastName) {
         return studentService.updateStudent(studentId, firstName, lastName);
     }
 
