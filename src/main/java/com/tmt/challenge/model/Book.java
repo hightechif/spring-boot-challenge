@@ -3,23 +3,17 @@ package com.tmt.challenge.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class Book {
+public class Book extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String bookName;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreatedDate
-    private Date createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "student_id", nullable = false)
@@ -30,9 +24,8 @@ public class Book {
     public Book() {
     }
 
-    public Book(String bookName, Date createdAt, Student student) {
+    public Book(String bookName, Student student) {
         this.bookName = bookName;
-        this.createdAt = createdAt;
         this.student = student;
     }
 
@@ -52,14 +45,6 @@ public class Book {
         this.bookName = bookName;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Student getStudent() {
         return student;
     }
@@ -73,7 +58,6 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", bookName='" + bookName + '\'' +
-                ", createdAt=" + createdAt +
                 ", student=" + student +
                 '}';
     }
