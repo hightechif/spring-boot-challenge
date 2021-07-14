@@ -22,15 +22,7 @@ public class BookService {
         this.studentRepo = studentRepo;
     }
 
-    // CREATE Book
-    public Book createBook(Long studentId, Book book) {
-        return studentRepo.findById(studentId).map(student -> {
-            book.setStudent(student);
-            return bookRepo.save(book);
-        }).orElseThrow(() -> new ResourceNotFoundException("StudentId " + studentId + " not found"));
-    }
-
-    // REAL All Book by Student ID
+    // READ All Book by Student ID
     public Page<Book> getAllBooksByStudentId(Long studentId, Pageable pageable) {
         return bookRepo.findByStudentId(studentId, pageable);
     }

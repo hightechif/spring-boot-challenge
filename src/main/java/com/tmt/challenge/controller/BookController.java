@@ -21,12 +21,6 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @PostMapping("/students/{studentId}/books")
-    public Book createBook(@PathVariable(value = "studentId") Long studentId,
-                           @Valid @RequestBody Book book) {
-        return bookService.createBook(studentId, book);
-    }
-
     @GetMapping("/students/{studentId}/books")
     public Page<Book> getAllBooksByStudentId(@PathVariable(value = "studentId") Long studentId,
                                              Pageable pageable) {
