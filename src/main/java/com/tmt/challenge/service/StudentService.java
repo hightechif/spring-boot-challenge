@@ -22,12 +22,10 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepo studentRepo;
-    private final BookRepo bookRepo;
 
     @Autowired
-    public StudentService(StudentRepo studentRepo, BookRepo bookRepo) {
+    public StudentService(StudentRepo studentRepo) {
         this.studentRepo = studentRepo;
-        this.bookRepo = bookRepo;
     }
 
     // Convert to DTO;
@@ -42,21 +40,21 @@ public class StudentService {
     }
 
     // CREATE New Student
-    public void addNewStudent(StudentWithBooksDTO studentWithBooks) {
-        Optional<Student> studentWithBooksOptional = studentRepo.findStudentByEmail(studentWithBooks.getEmail());
-        if (studentWithBooksOptional.isPresent()) {
+    public StudentDTO addNewStudent(Student student) {
+        Optional<Student> studentOptional = studentRepo.findStudentByEmail(student.getEmail());
+        if (studentOptional.isPresent()) {
             throw new IllegalStateException("email already exist");
         }
-        Student student = studentWithBooks.getStudent();
         studentRepo.save(student);
-        List<String> bookNames = studentWithBooks.getBooks();
-        bookNames.forEach(bookName -> {
-            Book book = new Book();
-            book.setBookName(bookName);
-            book.setCreatedAt(new Timestamp(new Date().getTime()));
-            book.setStudent(student);
-            bookRepo.save(book);
-        });
+
+//        List<String> bookNames = studentWithBooks.getBooks();
+//        bookNames.forEach(bookName -> {
+//            Book book = new Book();
+//            book.setBookName(bookName);
+//            book.setCreatedAt(new Timestamp(new Date().getTime()));
+//            book.setStudent(student);
+//            bookRepo.save(book);
+//        });
 
 //        JSONObject result = new JSONObject();
 //        result.put("id", student.getId());
@@ -66,6 +64,7 @@ public class StudentService {
 //        result.put("age", student.getAge());
 //        result.put("books", bookNames);
 //        return result;
+        return convertToDTO(student);
     }
 
     // READ All Students
