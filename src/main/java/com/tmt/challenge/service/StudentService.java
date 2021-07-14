@@ -70,7 +70,7 @@ public class StudentService {
 
     // UPDATE Student
     @Transactional
-    public void updateStudent(Long studentId, String firstName, String lastName) {
+    public ResponseDTO updateStudent(Long studentId, String firstName, String lastName) {
         Student student = studentRepo.findById(studentId)
                 .orElseThrow(() -> new IllegalStateException("student with id " + studentId + " does not exist"));
         if (firstName != null && firstName.length() > 0 && !Objects.equals(student.getFirstName(), firstName)) {
@@ -79,6 +79,7 @@ public class StudentService {
         if (lastName != null && lastName.length() > 0 && !Objects.equals(student.getLastName(), lastName)) {
             student.setLastName(lastName);
         }
+        return new ResponseDTO("Update Success");
     }
 
     // DELETE Student
