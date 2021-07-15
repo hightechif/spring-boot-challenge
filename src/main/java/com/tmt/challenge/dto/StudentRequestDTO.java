@@ -1,6 +1,7 @@
 package com.tmt.challenge.dto;
 
 import com.tmt.challenge.model.Book;
+import com.tmt.challenge.model.Course;
 import com.tmt.challenge.model.Student;
 import com.tmt.challenge.model.StudentIdCard;
 
@@ -16,6 +17,21 @@ public class StudentRequestDTO {
     private LocalDate dateOfBirth;
     private List<Book> books;
     private String cardNumber;
+    private List<Course> courses;
+
+    public StudentRequestDTO() {
+    }
+
+    public StudentRequestDTO(Long id, String firstName, String lastName, String email, LocalDate dateOfBirth, List<Book> books, String cardNumber, List<Course> courses) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.books = books;
+        this.cardNumber = cardNumber;
+        this.courses = courses;
+    }
 
     public Long getId() {
         return id;
@@ -73,6 +89,14 @@ public class StudentRequestDTO {
         this.cardNumber = cardNumber;
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
     public Student getStudent() {
         Student student = new Student();
         student.setId(this.getId());
@@ -85,13 +109,15 @@ public class StudentRequestDTO {
 
     @Override
     public String toString() {
-        return "StudentWithBooksDTO{" +
+        return "StudentRequestDTO{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", books=" + books +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", courses=" + courses +
                 '}';
     }
 }

@@ -46,6 +46,11 @@ public class StudentController {
         return studentService.getStudentByCardNumber(cardNumber);
     }
 
+    @GetMapping("/get-by-department")
+    public List<StudentDTO> getStudentByDepartment(@RequestParam String department) {
+        return studentService.getStudentByDepartment(department);
+    }
+
     @PutMapping("/edit/{studentId}")
     public ResponseDTO updateStudent(@PathVariable("studentId") Long studentId,
                                      @RequestParam(required = false) String firstName,

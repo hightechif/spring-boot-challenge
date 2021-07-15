@@ -3,14 +3,12 @@ package com.tmt.challenge.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Student Model
  * A Class Object as a Database Model for Student Object
- * */
+ */
 
 @Entity // Entity annotation to persist Student object as an Entity
 public class Student {
@@ -36,6 +34,16 @@ public class Student {
             cascade = CascadeType.ALL,
             mappedBy = "student")
     private StudentIdCard studentIdCard;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "student_courses",
+            joinColumns = {@JoinColumn(name = "student_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")})
+    private List<Course> courses = List.of();
 
     // Empty Constructor
     public Student() {
@@ -109,6 +117,14 @@ public class Student {
         this.studentIdCard = studentIdCard;
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -120,6 +136,7 @@ public class Student {
                 ", age=" + age +
                 ", books=" + books +
                 ", studentIdCard=" + studentIdCard +
+                ", courses=" + courses +
                 '}';
     }
 }
