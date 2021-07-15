@@ -6,6 +6,7 @@ import com.tmt.challenge.dto.StudentWithBooksDTO;
 import com.tmt.challenge.model.Student;
 import com.tmt.challenge.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class StudentController {
     }
 
     @GetMapping(path = "/get-all")
-    public List<StudentDTO> getAllStudents() {
-        return studentService.getAllStudents();
+    public List<StudentDTO> getAllStudents(Pageable pageable) {
+        return studentService.getAllStudents(pageable);
     }
 
     @GetMapping(path = "/get/{studentId}")

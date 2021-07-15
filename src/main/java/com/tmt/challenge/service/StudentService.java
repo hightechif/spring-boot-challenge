@@ -1,5 +1,6 @@
 package com.tmt.challenge.service;
 
+import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.dto.ResponseDTO;
 import com.tmt.challenge.dto.StudentDTO;
 import com.tmt.challenge.dto.StudentWithBooksDTO;
@@ -8,6 +9,8 @@ import com.tmt.challenge.model.Student;
 import com.tmt.challenge.repository.BookRepo;
 import com.tmt.challenge.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -36,6 +39,9 @@ public class StudentService {
         studentDTO.setLastName(student.getLastName());
         studentDTO.setEmail(student.getEmail());
         studentDTO.setAge(student.getAge());
+        List<BookDTO> books = student.getBooks().stream().map(x -> new BookDTO(x.getId(), x.getBookName(), x.getCreatedAt()))
+                .collect(Collectors.toList());
+        studentDTO.setBooks(books);
         return studentDTO;
     }
 
@@ -47,21 +53,21 @@ public class StudentService {
         }
 
         Student student = studentWithBooks.getStudent();
-        studentRepo.save(student);
 
         List<String> bookNames = studentWithBooks.getBooks();
         bookNames.forEach(name -> {
             Book book = new Book();
             book.setBookName(name);
             book.setStudent(student);
-            bookRepo.save(book);
+            student.getBooks().add(book);
         });
 
+        studentRepo.save(student);
         return new ResponseDTO("Data Created");
     }
 
     // READ All Students
-    public List<StudentDTO> getAllStudents() {
+    public List<StudentDTO> getAllStudents(Pageable pageable) {
         List<Student> students = studentRepo.findAll();
         return students.stream().map(this::convertToDTO).collect(Collectors.toList());
     }

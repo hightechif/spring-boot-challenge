@@ -1,5 +1,7 @@
 package com.tmt.challenge.dto;
 
+import java.util.List;
+
 public class StudentDTO {
 
     private Long id;
@@ -7,6 +9,7 @@ public class StudentDTO {
     private String lastName;
     private String email;
     private Integer age;
+    private List<BookDTO> books;
 
     public Long getId() {
         return id;
@@ -48,6 +51,14 @@ public class StudentDTO {
         this.age = age;
     }
 
+    public List<BookDTO> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<BookDTO> books) {
+        this.books = books;
+    }
+
     @Override
     public String toString() {
         return "StudentDTO{" +
@@ -56,6 +67,7 @@ public class StudentDTO {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", age=" + age +
+                ", books=" + books +
                 '}';
     }
 }

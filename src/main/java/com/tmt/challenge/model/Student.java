@@ -3,6 +3,8 @@ package com.tmt.challenge.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Student Model
@@ -22,6 +24,10 @@ public class Student {
     private LocalDate dateOfBirth;   // date of birth
     @Transient
     private Integer age;
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "student")
+    private Set<Book> books = new HashSet<>();
 
     // Empty Constructor
     public Student() {
@@ -79,6 +85,14 @@ public class Student {
         return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
     }
 
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -88,6 +102,7 @@ public class Student {
                 ", email='" + email + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", age=" + age +
+                ", books=" + books +
                 '}';
     }
 }
