@@ -3,14 +3,14 @@ package com.tmt.challenge.service;
 import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.dto.ResponseDTO;
 import com.tmt.challenge.dto.StudentDTO;
-import com.tmt.challenge.dto.StudentWithBooksDTO;
+import com.tmt.challenge.dto.StudentRequestDTO;
+import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Student;
-import com.tmt.challenge.repository.BookRepo;
+import com.tmt.challenge.model.StudentIdCard;
+import com.tmt.challenge.repository.StudentIdCardRepo;
 import com.tmt.challenge.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepo studentRepo;
-    private final BookRepo bookRepo;
+    private final StudentIdCardRepo studentIdCardRepo;
 
     @Autowired
-    public StudentService(StudentRepo studentRepo, BookRepo bookRepo) {
+    public StudentService(StudentRepo studentRepo, StudentIdCardRepo studentIdCardRepo) {
         this.studentRepo = studentRepo;
-        this.bookRepo = bookRepo;
+        this.studentIdCardRepo = studentIdCardRepo;
     }
 
     // Convert to DTO;
@@ -42,32 +42,38 @@ public class StudentService {
         List<BookDTO> books = student.getBooks().stream().map(x -> new BookDTO(x.getId(), x.getBookName(), x.getCreatedAt()))
                 .collect(Collectors.toList());
         studentDTO.setBooks(books);
+        StudentIdCard idCard = student.getStudentIdCard();
+        studentDTO.setCardNumber(idCard.getCardNumber());
         return studentDTO;
     }
 
     // CREATE New Student
-    public ResponseDTO addNewStudent(StudentWithBooksDTO studentWithBooks) {
-        Optional<Student> studentOptional = studentRepo.findStudentByEmail(studentWithBooks.getEmail());
+    public ResponseDTO addNewStudent(StudentRequestDTO studentRequest) {
+        Optional<Student> studentOptional = studentRepo.findStudentByEmail(studentRequest.getEmail());
         if (studentOptional.isPresent()) {
             throw new IllegalStateException("email already exist");
         }
 
-        Student student = studentWithBooks.getStudent();
+        Student student = studentRequest.getStudent();
 
-        List<String> bookNames = studentWithBooks.getBooks();
-        bookNames.forEach(name -> {
-            Book book = new Book();
-            book.setBookName(name);
-            book.setStudent(student);
-            student.getBooks().add(book);
-        });
+        List<Book> books = studentRequest.getBooks().stream().map(x -> {
+            x.setStudent(student);
+            return x;
+        }).collect(Collectors.toList());
 
+        StudentIdCard idCard = new StudentIdCard();
+        String cardNumber = studentRequest.getCardNumber();
+        idCard.setCardNumber(cardNumber);
+        idCard.setStudent(student);
+
+        student.setBooks(books);
+        student.setStudentIdCard(idCard);
         studentRepo.save(student);
         return new ResponseDTO("Data Created");
     }
 
     // READ All Students
-    public List<StudentDTO> getAllStudents(Pageable pageable) {
+    public List<StudentDTO> getAllStudents() {
         List<Student> students = studentRepo.findAll();
         return students.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
@@ -112,5 +118,17 @@ public class StudentService {
         }
         studentRepo.deleteById(studentId);
         return new ResponseDTO("Delete Success");
+    }
+
+    // READ Student by Card Number
+    public StudentDTO getStudentByCardNumber(String cardNumber) {
+        Optional<StudentIdCard> studentIdOptional = studentIdCardRepo.findStudentIdCardByCardNumber(cardNumber);
+        if (!studentIdOptional.isPresent()) {
+            throw new ResourceNotFoundException("Student ID with cardNumber " + cardNumber + " not found");
+        }
+        StudentIdCard studentIdCard = studentIdOptional.get();
+
+        Student student = studentIdCard.getStudent();
+        return convertToDTO(student);
     }
 }

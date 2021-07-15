@@ -10,6 +10,20 @@ public class StudentDTO {
     private String email;
     private Integer age;
     private List<BookDTO> books;
+    private String cardNumber;
+
+    public StudentDTO() {
+    }
+
+    public StudentDTO(Long id, String firstName, String lastName, String email, Integer age, List<BookDTO> books, String cardNumber) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.age = age;
+        this.books = books;
+        this.cardNumber = cardNumber;
+    }
 
     public Long getId() {
         return id;
@@ -59,6 +73,14 @@ public class StudentDTO {
         this.books = books;
     }
 
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
     @Override
     public String toString() {
         return "StudentDTO{" +
@@ -68,6 +90,7 @@ public class StudentDTO {
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 ", books=" + books +
+                ", idCard=" + cardNumber +
                 '}';
     }
 }

@@ -2,19 +2,20 @@ package com.tmt.challenge.dto;
 
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Student;
-import org.json.JSONObject;
+import com.tmt.challenge.model.StudentIdCard;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class StudentWithBooksDTO {
+public class StudentRequestDTO {
 
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private LocalDate dateOfBirth;
-    private List<String> books;
+    private List<Book> books;
+    private String cardNumber;
 
     public Long getId() {
         return id;
@@ -56,12 +57,20 @@ public class StudentWithBooksDTO {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public List<String> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(List<String> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 
     public Student getStudent() {
