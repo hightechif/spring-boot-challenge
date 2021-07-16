@@ -1,9 +1,7 @@
 package com.tmt.challenge.dto;
 
 import com.tmt.challenge.model.Book;
-import com.tmt.challenge.model.Course;
 import com.tmt.challenge.model.Student;
-import com.tmt.challenge.model.StudentIdCard;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,21 +13,21 @@ public class StudentRequestDTO {
     private String lastName;
     private String email;
     private LocalDate dateOfBirth;
-    private List<Book> books;
-    private String cardNumber;
-    private List<Course> courses;
+    private List<BookDTO> books;
+    private StudentIdCardDTO studentIdCard;
+    private List<CourseDTO> courses;
 
     public StudentRequestDTO() {
     }
 
-    public StudentRequestDTO(Long id, String firstName, String lastName, String email, LocalDate dateOfBirth, List<Book> books, String cardNumber, List<Course> courses) {
+    public StudentRequestDTO(Long id, String firstName, String lastName, String email, LocalDate dateOfBirth, List<BookDTO> books, StudentIdCardDTO studentIdCard, List<CourseDTO> courses) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.books = books;
-        this.cardNumber = cardNumber;
+        this.studentIdCard = studentIdCard;
         this.courses = courses;
     }
 
@@ -73,27 +71,27 @@ public class StudentRequestDTO {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public List<Book> getBooks() {
+    public List<BookDTO> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(List<BookDTO> books) {
         this.books = books;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public StudentIdCardDTO getStudentIdCard() {
+        return studentIdCard;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public void setStudentIdCard(StudentIdCardDTO studentIdCard) {
+        this.studentIdCard = studentIdCard;
     }
 
-    public List<Course> getCourses() {
+    public List<CourseDTO> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Course> courses) {
+    public void setCourses(List<CourseDTO> courses) {
         this.courses = courses;
     }
 
@@ -116,7 +114,7 @@ public class StudentRequestDTO {
                 ", email='" + email + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", books=" + books +
-                ", cardNumber='" + cardNumber + '\'' +
+                ", studentIdCard='" + studentIdCard + '\'' +
                 ", courses=" + courses +
                 '}';
     }

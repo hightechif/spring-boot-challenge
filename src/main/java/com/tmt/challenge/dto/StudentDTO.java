@@ -1,5 +1,7 @@
 package com.tmt.challenge.dto;
 
+import com.tmt.challenge.model.StudentIdCard;
+
 import java.util.List;
 
 public class StudentDTO {
@@ -10,20 +12,20 @@ public class StudentDTO {
     private String email;
     private Integer age;
     private List<BookDTO> books;
-    private String cardNumber;
+    private StudentIdCardDTO studentIdCard;
     private List<CourseDTO> courses;
 
     public StudentDTO() {
     }
 
-    public StudentDTO(Long id, String firstName, String lastName, String email, Integer age, List<BookDTO> books, String cardNumber, List<CourseDTO> courses) {
+    public StudentDTO(Long id, String firstName, String lastName, String email, Integer age, List<BookDTO> books, StudentIdCardDTO studentIdCard, List<CourseDTO> courses) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.age = age;
         this.books = books;
-        this.cardNumber = cardNumber;
+        this.studentIdCard = studentIdCard;
         this.courses = courses;
     }
 
@@ -75,12 +77,12 @@ public class StudentDTO {
         this.books = books;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public StudentIdCardDTO getStudentIdCard() {
+        return studentIdCard;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public void setStudentIdCard(StudentIdCardDTO studentIdCard) {
+        this.studentIdCard = studentIdCard;
     }
 
     public List<CourseDTO> getCourses() {
@@ -100,7 +102,7 @@ public class StudentDTO {
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 ", books=" + books +
-                ", cardNumber='" + cardNumber + '\'' +
+                ", studentIdCard='" + studentIdCard + '\'' +
                 ", courses=" + courses +
                 '}';
     }

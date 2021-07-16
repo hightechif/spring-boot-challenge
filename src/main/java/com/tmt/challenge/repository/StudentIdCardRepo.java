@@ -9,6 +9,4 @@ import java.util.Optional;
 @Repository
 public interface StudentIdCardRepo extends JpaRepository<StudentIdCard, Long> {
 
-    Optional<StudentIdCard> findStudentIdCardByCardNumber(String cardNumber);
-
 }

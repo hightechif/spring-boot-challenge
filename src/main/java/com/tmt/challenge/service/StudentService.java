@@ -6,8 +6,6 @@ import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Course;
 import com.tmt.challenge.model.Student;
 import com.tmt.challenge.model.StudentIdCard;
-import com.tmt.challenge.repository.CourseRepo;
-import com.tmt.challenge.repository.StudentIdCardRepo;
 import com.tmt.challenge.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,14 +20,10 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepo studentRepo;
-    private final StudentIdCardRepo studentIdCardRepo;
-    private final CourseRepo courseRepo;
 
     @Autowired
-    public StudentService(StudentRepo studentRepo, StudentIdCardRepo studentIdCardRepo, CourseRepo courseRepo) {
+    public StudentService(StudentRepo studentRepo) {
         this.studentRepo = studentRepo;
-        this.studentIdCardRepo = studentIdCardRepo;
-        this.courseRepo = courseRepo;
     }
 
     // Convert to DTO;
@@ -47,8 +41,11 @@ public class StudentService {
                 .collect(Collectors.toList());
         studentDTO.setBooks(books);
         // Set cardNumber
-        StudentIdCard idCard = student.getStudentIdCard();
-        studentDTO.setCardNumber(idCard.getCardNumber());
+        StudentIdCardDTO studentIdCardDTO = new StudentIdCardDTO();
+        StudentIdCard studentIdCard = student.getStudentIdCard();
+        studentIdCardDTO.setId(studentIdCard.getId());
+        studentIdCardDTO.setCardNumber(studentIdCard.getCardNumber());
+        studentDTO.setStudentIdCard(studentIdCardDTO);
         // Set Collection of Course
         List<CourseDTO> courses = student.getCourses().stream().map(x -> new CourseDTO(x.getId(), x.getName(), x.getDepartment()))
                 .collect(Collectors.toList());
@@ -68,26 +65,36 @@ public class StudentService {
         Student student = studentRequest.getStudent();
 
         // Extract Collection of Book from request body and set student to it
-        List<Book> books = studentRequest.getBooks().stream().map(x -> {
-            x.setStudent(student);
-            return x;
+        List<BookDTO> booksDTO = studentRequest.getBooks();
+        List<Book> books = booksDTO.stream().map(x -> {
+            Book book = new Book();
+            book.setId(x.getId());
+            book.setBookName(x.getBookName());
+            book.setStudent(student);
+            return book;
         }).collect(Collectors.toList());
 
         // Extract StudentIdCard from request body
-        StudentIdCard idCard = new StudentIdCard();
-        String cardNumber = studentRequest.getCardNumber();
-        idCard.setCardNumber(cardNumber);
-        idCard.setStudent(student);
+        StudentIdCardDTO studentIdCardDTO = studentRequest.getStudentIdCard();
+        StudentIdCard studentIdCard = new StudentIdCard();
+        studentIdCard.setCardNumber(studentIdCardDTO.getCardNumber());
+        studentIdCard.setStudent(student);
 
         // Extract Collection of course from request body and set student of it
-        List<Course> courses = studentRequest.getCourses().stream().map(x -> {
-            x.setStudents(List.of(student));
-            return x;
+        List<CourseDTO> coursesDTO = studentRequest.getCourses();
+        List<Course> courses = coursesDTO.stream().map(x -> {
+            Course course = new Course();
+            course.setId(x.getId());
+            course.setName(x.getName());
+            course.setDepartment(x.getDepartment());
+            course.setStudents(List.of(student));
+            return course;
         }).collect(Collectors.toList());
+
 
         // Set all extracted data into student object and save it
         student.setBooks(books);
-        student.setStudentIdCard(idCard);
+        student.setStudentIdCard(studentIdCard);
         student.setCourses(courses);
         studentRepo.save(student);
         return new ResponseDTO("Data Created");
@@ -143,25 +150,16 @@ public class StudentService {
 
     // READ Student by Card Number
     public StudentDTO getStudentByCardNumber(String cardNumber) {
-        Optional<StudentIdCard> studentIdOptional = studentIdCardRepo.findStudentIdCardByCardNumber(cardNumber);
-        if (!studentIdOptional.isPresent()) {
+        Optional<Student> studentOptional = studentRepo.findStudentByStudentIdCardCardNumber(cardNumber);
+        if (!studentOptional.isPresent()) {
             throw new ResourceNotFoundException("Student ID with cardNumber " + cardNumber + " not found");
         }
-        StudentIdCard studentIdCard = studentIdOptional.get();
-
-        Student student = studentIdCard.getStudent();
-        return convertToDTO(student);
+        return convertToDTO(studentOptional.get());
     }
 
     // READ Student by Department
     public List<StudentDTO> getStudentByDepartment(String department) {
-        Optional<Course> courseOptional = courseRepo.findCourseByDepartment(department);
-        if (!courseOptional.isPresent()) {
-            throw new ResourceNotFoundException("Student ID at Department " + department + " not found");
-        }
-        Course course = courseOptional.get();
-
-        List<StudentDTO> studentList = course.getStudents().stream().map(this::convertToDTO).collect(Collectors.toList());
-        return studentList;
+        List<Student> studentList = studentRepo.findStudentByCoursesDepartment(department);
+        return studentList.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 }

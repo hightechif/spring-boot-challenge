@@ -1,7 +1,6 @@
 package com.tmt.challenge.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -10,10 +9,10 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @NotNull
+    @Column(nullable = false)
     private String department;
 
     @ManyToMany(fetch = FetchType.LAZY,

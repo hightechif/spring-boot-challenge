@@ -3,6 +3,7 @@ package com.tmt.challenge.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class Student {
     @JoinTable(name = "student_courses",
             joinColumns = {@JoinColumn(name = "student_id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id")})
-    private List<Course> courses = List.of();
+    private List<Course> courses = new ArrayList<>();
 
     // Empty Constructor
     public Student() {
