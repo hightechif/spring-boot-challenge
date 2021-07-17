@@ -4,13 +4,12 @@ import javax.persistence.*;
 
 @Entity
 public class StudentIdCard {
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true)
     private String cardNumber;
-
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
@@ -19,11 +18,13 @@ public class StudentIdCard {
     public StudentIdCard() {
     }
 
-    // Constructor with Attributes
+    // Constructor with parameters
     public StudentIdCard(String cardNumber, Student student) {
         this.cardNumber = cardNumber;
         this.student = student;
     }
+
+    // Getter and Setter
 
     public Long getId() {
         return id;
@@ -49,6 +50,7 @@ public class StudentIdCard {
         this.student = student;
     }
 
+    // toString
     @Override
     public String toString() {
         return "StudentIdCard{" +

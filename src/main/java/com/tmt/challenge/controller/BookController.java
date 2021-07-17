@@ -4,7 +4,6 @@ import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +35,9 @@ public class BookController {
         return bookService.updateBook(studentId, bookId, book);
     }
 
-    @DeleteMapping("/posts/{postId}/books/{bookId}")
-    public ResponseEntity<?> deleteBook(@PathVariable(value = "studentId") Long studendId,
+    @DeleteMapping("/students/{studentId}/books/{bookId}")
+    public ResponseEntity<?> deleteBook(@PathVariable(value = "studentId") Long studentId,
                                         @PathVariable(value = "bookId") Long bookId) {
-        return bookService.deleteBook(studendId, bookId);
+        return bookService.deleteBook(studentId, bookId);
     }
 }

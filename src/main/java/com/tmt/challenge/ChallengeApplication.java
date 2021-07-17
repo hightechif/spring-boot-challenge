@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-@EnableJpaAuditing
+@EnableJpaAuditing     // JPA Auditing for generate timestamp and auditing
 public class ChallengeApplication {
 
     public static void main(String[] args) {

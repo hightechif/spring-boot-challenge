@@ -3,19 +3,23 @@ package com.tmt.challenge.dto;
 import java.util.Date;
 
 public class BookDTO {
-
+    // Attributes
     private Long id;
     private String bookName;
     private Date createdAt;
 
+    // Empty Constructor
     public BookDTO() {
     }
 
+    // Constructor with parameters
     public BookDTO(Long id, String bookName, Date createdAt) {
         this.id = id;
         this.bookName = bookName;
         this.createdAt = createdAt;
     }
+
+    // Getter and Setter
 
     public Long getId() {
         return id;
@@ -41,6 +45,7 @@ public class BookDTO {
         this.createdAt = createdAt;
     }
 
+    // toString
     @Override
     public String toString() {
         return "BookDTO{" +

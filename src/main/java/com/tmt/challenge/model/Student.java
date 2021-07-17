@@ -13,34 +13,27 @@ import java.util.List;
 
 @Entity // Entity annotation to persist Student object as an Entity
 public class Student {
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
-
     @Column(unique = true)
     private String email;
-    private LocalDate dateOfBirth;   // date of birth
-
+    private LocalDate dateOfBirth;
     @Transient
     private Integer age;
-
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "student")
-    private List<Book> books = List.of();
-
+    private List<Book> books = new ArrayList<>();
     @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "student")
     private StudentIdCard studentIdCard;
-
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "student_courses",
             joinColumns = {@JoinColumn(name = "student_id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id")})
@@ -50,13 +43,15 @@ public class Student {
     public Student() {
     }
 
-    // Constructor with Attributes
+    // Constructor with parameters
     public Student(String firstName, String lastName, String email, LocalDate dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
     }
+
+    // Getter and Setter
 
     public Long getId() {
         return id;
@@ -102,6 +97,10 @@ public class Student {
         return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
     }
 
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     public List<Book> getBooks() {
         return books;
     }
@@ -126,6 +125,7 @@ public class Student {
         this.courses = courses;
     }
 
+    // toString
     @Override
     public String toString() {
         return "Student{" +

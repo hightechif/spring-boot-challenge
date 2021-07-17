@@ -1,17 +1,21 @@
 package com.tmt.challenge.dto;
 
 public class StudentIdCardDTO {
-
+    // Attributes
     private Long id;
     private String cardNumber;
 
+    // Empty Constructor
     public StudentIdCardDTO() {
     }
 
+    // Constructor with parameters
     public StudentIdCardDTO(Long id, String cardNumber) {
         this.id = id;
         this.cardNumber = cardNumber;
     }
+
+    // Getter and Setter
 
     public Long getId() {
         return id;
@@ -29,6 +33,7 @@ public class StudentIdCardDTO {
         this.cardNumber = cardNumber;
     }
 
+    // toString
     @Override
     public String toString() {
         return "StudentIdCardDTO{" +

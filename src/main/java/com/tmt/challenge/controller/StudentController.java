@@ -64,14 +64,12 @@ public class StudentController {
     }
 
     @GetMapping("/get-by-book-name")
-    public List<StudentDTO> getStudentByBookName(String bookName, Pageable pageable) {
-        return studentService.getStudentByBookName(bookName, pageable).getContent();
+    public List<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
+        return studentService.getStudentsByBookName(bookName, pageable).getContent();
     }
 
-    ;
-
     @GetMapping("/get-by-course-name")
-    public List<StudentDTO> getStudentByCourseName(String courseName, Pageable pageable) {
-        return studentService.getStudentByCourseName(courseName, pageable).getContent();
+    public List<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
+        return studentService.getStudentsByCourseName(courseName, pageable).getContent();
     }
 }

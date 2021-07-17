@@ -1,13 +1,12 @@
 package com.tmt.challenge.dto;
 
-import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Student;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class StudentRequestDTO {
-
+    // Attributes
     private Long id;
     private String firstName;
     private String lastName;
@@ -17,9 +16,11 @@ public class StudentRequestDTO {
     private StudentIdCardDTO studentIdCard;
     private List<CourseDTO> courses;
 
+    // Empty Constructor
     public StudentRequestDTO() {
     }
 
+    // Constructor with parameters
     public StudentRequestDTO(Long id, String firstName, String lastName, String email, LocalDate dateOfBirth, List<BookDTO> books, StudentIdCardDTO studentIdCard, List<CourseDTO> courses) {
         this.id = id;
         this.firstName = firstName;
@@ -30,6 +31,8 @@ public class StudentRequestDTO {
         this.studentIdCard = studentIdCard;
         this.courses = courses;
     }
+
+    // Getter and Setter
 
     public Long getId() {
         return id;
@@ -95,6 +98,7 @@ public class StudentRequestDTO {
         this.courses = courses;
     }
 
+    // Student Getter
     public Student getStudent() {
         Student student = new Student();
         student.setId(this.getId());
@@ -105,6 +109,7 @@ public class StudentRequestDTO {
         return student;
     }
 
+    // toString
     @Override
     public String toString() {
         return "StudentRequestDTO{" +

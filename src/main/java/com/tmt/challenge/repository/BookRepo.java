@@ -13,4 +13,5 @@ public interface BookRepo extends JpaRepository<Book, Long> {
 
     Page<Book> findByStudentId(Long studentId, Pageable pageable);
     Optional<Book> findByIdAndStudentId(Long id, Long studentId);
+
 }

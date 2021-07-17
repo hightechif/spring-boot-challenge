@@ -51,10 +51,10 @@ public class BookService {
     }
 
     // DELETE Book
-    public ResponseEntity<?> deleteBook(Long studendId, Long bookId) {
-        return bookRepo.findByIdAndStudentId(bookId, studendId).map(book -> {
+    public ResponseEntity<?> deleteBook(Long studentId, Long bookId) {
+        return bookRepo.findByIdAndStudentId(bookId, studentId).map(book -> {
             bookRepo.delete(book);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + bookId + " and studentId " + studendId));
+        }).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + bookId + " and studentId " + studentId));
     }
 }

@@ -16,19 +16,15 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 
     @Query("SELECT s FROM Student s WHERE s.email = ?1")
     Optional<Student> findStudentByEmail(String email);
-
     Optional<Student> findStudentByStudentIdCardCardNumber(String cardNumber);
-
     List<Student> findStudentByCoursesDepartment(String department);
-
     @Query("SELECT s FROM Student s LEFT JOIN Book b ON s.id = b.student.id WHERE b.bookName = :bookName")
-    Page<Student> findStudentByBookName(@Param("bookName") String bookName, Pageable pageable);
-
+    Page<Student> findStudentsByBookName(@Param("bookName") String bookName, Pageable pageable);
     @Query(value = "SELECT * " +
                    "FROM student as s " +
                    "JOIN student_courses as sc ON s.id = sc.student_id " +
                    "JOIN course as c ON sc.course_id = c.id " +
                    "WHERE c.name = :courseName", nativeQuery = true)
-    Page<Student> findStudentByCourseName(@Param("courseName") String courseName, Pageable pageable);
+    Page<Student> findStudentsByCourseName(@Param("courseName") String courseName, Pageable pageable);
 
 }

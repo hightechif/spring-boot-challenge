@@ -8,25 +8,28 @@ import javax.persistence.*;
 
 @Entity
 public class Book extends AuditModel {
-
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String bookName;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "student_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Student student;
 
+    // Empty Constructor
     public Book() {
     }
 
+    // Constructor with parameters
     public Book(String bookName, Student student) {
         this.bookName = bookName;
         this.student = student;
     }
+
+    // Getter and Setter
 
     public Long getId() {
         return id;
@@ -52,6 +55,7 @@ public class Book extends AuditModel {
         this.student = student;
     }
 
+    // toString
     @Override
     public String toString() {
         return "Book{" +

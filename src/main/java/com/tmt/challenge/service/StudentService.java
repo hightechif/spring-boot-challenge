@@ -62,10 +62,8 @@ public class StudentService {
         if (studentOptional.isPresent()) {
             throw new IllegalStateException("email already exist");
         }
-
         // Extract Student from request body
         Student student = studentRequest.getStudent();
-
         // Extract Collection of Book from request body and set student to it
         List<BookDTO> booksDTO = studentRequest.getBooks();
         List<Book> books = booksDTO.stream().map(x -> {
@@ -75,13 +73,11 @@ public class StudentService {
             book.setStudent(student);
             return book;
         }).collect(Collectors.toList());
-
         // Extract StudentIdCard from request body
         StudentIdCardDTO studentIdCardDTO = studentRequest.getStudentIdCard();
         StudentIdCard studentIdCard = new StudentIdCard();
         studentIdCard.setCardNumber(studentIdCardDTO.getCardNumber());
         studentIdCard.setStudent(student);
-
         // Extract Collection of course from request body and set student of it
         List<CourseDTO> coursesDTO = studentRequest.getCourses();
         List<Course> courses = coursesDTO.stream().map(x -> {
@@ -92,8 +88,6 @@ public class StudentService {
             course.setStudents(List.of(student));
             return course;
         }).collect(Collectors.toList());
-
-
         // Set all extracted data into student object and save it
         student.setBooks(books);
         student.setStudentIdCard(studentIdCard);
@@ -111,7 +105,7 @@ public class StudentService {
     // READ Student by ID
     public StudentDTO getStudentById(Long studentId) {
         Optional<Student> studentOptional = studentRepo.findById(studentId);
-        if (!studentOptional.isPresent()) {
+        if (studentOptional.isEmpty()) {
             throw new IllegalStateException("student with id " + studentId + " does not exist");
         }
         return convertToDTO(studentOptional.get());
@@ -120,7 +114,7 @@ public class StudentService {
     // READ Student by Email
     public StudentDTO getStudentByEmail(String email) {
         Optional<Student> studentOptional = studentRepo.findStudentByEmail(email);
-        if (!studentOptional.isPresent()) {
+        if (studentOptional.isEmpty()) {
             throw new IllegalStateException("student with email " + email + " does not exist");
         }
         return convertToDTO(studentOptional.get());
@@ -153,7 +147,7 @@ public class StudentService {
     // READ Student by Card Number
     public StudentDTO getStudentByCardNumber(String cardNumber) {
         Optional<Student> studentOptional = studentRepo.findStudentByStudentIdCardCardNumber(cardNumber);
-        if (!studentOptional.isPresent()) {
+        if (studentOptional.isEmpty()) {
             throw new ResourceNotFoundException("Student ID with cardNumber " + cardNumber + " not found");
         }
         return convertToDTO(studentOptional.get());
@@ -165,15 +159,15 @@ public class StudentService {
         return studentList.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // READ All Students by Book Name
-    public Page<StudentDTO> getStudentByBookName(String bookName, Pageable pageable) {
-        Page<Student> studentPage = studentRepo.findStudentByBookName(bookName, pageable);
+    // READ Students by Book Name
+    public Page<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
+        Page<Student> studentPage = studentRepo.findStudentsByBookName(bookName, pageable);
         return studentPage.map(this::convertToDTO);
     }
 
-    // READ All Students by Course Name
-    public Page<StudentDTO> getStudentByCourseName(String courseName, Pageable pageable) {
-        Page<Student> studentPage = studentRepo.findStudentByCourseName(courseName, pageable);
+    // READ Students by Course Name
+    public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
+        Page<Student> studentPage = studentRepo.findStudentsByCourseName(courseName, pageable);
         return studentPage.map(this::convertToDTO);
     }
 }

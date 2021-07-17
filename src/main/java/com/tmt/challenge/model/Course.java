@@ -1,37 +1,38 @@
 package com.tmt.challenge.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Course {
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false)
     private String department;
-
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE,
             },
             mappedBy = "courses")
-    private List<Student> students = List.of();
+    private List<Student> students = new ArrayList<>();
 
     // Empty Constructor
     public Course() {
     }
 
-    // Constructor with Attributes
+    // Constructor with parameters
     public Course(String name, String department) {
         this.name = name;
         this.department = department;
     }
+
+    // Getter and Setter
 
     public Long getId() {
         return id;
@@ -65,6 +66,7 @@ public class Course {
         this.students = students;
     }
 
+    // toString
     @Override
     public String toString() {
         return "Course{" +
