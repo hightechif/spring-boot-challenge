@@ -1,5 +1,6 @@
 package com.tmt.challenge.service;
 
+import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.repository.BookRepo;
@@ -22,9 +23,19 @@ public class BookService {
         this.studentRepo = studentRepo;
     }
 
+    // Convert Book to BookDTO
+    private BookDTO convertToDTO(Book book) {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setId(book.getId());
+        bookDTO.setBookName(book.getBookName());
+        bookDTO.setCreatedAt(book.getCreatedAt());
+        return bookDTO;
+    }
+
     // READ All Book by Student ID
-    public Page<Book> getAllBooksByStudentId(Long studentId, Pageable pageable) {
-        return bookRepo.findByStudentId(studentId, pageable);
+    public Page<BookDTO> getAllBooksByStudentId(Long studentId, Pageable pageable) {
+        Page<Book> bookPage = bookRepo.findByStudentId(studentId, pageable);
+        return bookPage.map(this::convertToDTO);
     }
 
     // UPDATE Book

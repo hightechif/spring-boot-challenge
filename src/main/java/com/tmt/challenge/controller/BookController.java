@@ -1,5 +1,6 @@
 package com.tmt.challenge.controller;
 
+import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/")
@@ -22,9 +24,9 @@ public class BookController {
     }
 
     @GetMapping("/students/{studentId}/books")
-    public Page<Book> getAllBooksByStudentId(@PathVariable(value = "studentId") Long studentId,
-                                             Pageable pageable) {
-        return bookService.getAllBooksByStudentId(studentId, pageable);
+    public List<BookDTO> getAllBooksByStudentId(@PathVariable(value = "studentId") Long studentId,
+                                                Pageable pageable) {
+        return bookService.getAllBooksByStudentId(studentId, pageable).getContent();
     }
 
     @PutMapping("/students/{studentId}/books/{bookId}")

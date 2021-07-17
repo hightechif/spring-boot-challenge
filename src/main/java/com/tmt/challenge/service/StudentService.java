@@ -8,6 +8,8 @@ import com.tmt.challenge.model.Student;
 import com.tmt.challenge.model.StudentIdCard;
 import com.tmt.challenge.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -161,5 +163,17 @@ public class StudentService {
     public List<StudentDTO> getStudentByDepartment(String department) {
         List<Student> studentList = studentRepo.findStudentByCoursesDepartment(department);
         return studentList.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    // READ All Students by Book Name
+    public Page<StudentDTO> getStudentByBookName(String bookName, Pageable pageable) {
+        Page<Student> studentPage = studentRepo.findStudentByBookName(bookName, pageable);
+        return studentPage.map(this::convertToDTO);
+    }
+
+    // READ All Students by Course Name
+    public Page<StudentDTO> getStudentByCourseName(String courseName, Pageable pageable) {
+        Page<Student> studentPage = studentRepo.findStudentByCourseName(courseName, pageable);
+        return studentPage.map(this::convertToDTO);
     }
 }
