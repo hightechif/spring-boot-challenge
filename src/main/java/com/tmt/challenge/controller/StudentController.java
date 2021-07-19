@@ -5,6 +5,7 @@ import com.tmt.challenge.dto.StudentDTO;
 import com.tmt.challenge.dto.StudentRequestDTO;
 import com.tmt.challenge.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,12 +65,12 @@ public class StudentController {
     }
 
     @GetMapping("/get-by-book-name")
-    public List<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
-        return studentService.getStudentsByBookName(bookName, pageable).getContent();
+    public Page<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
+        return studentService.getStudentsByBookName(bookName, pageable);
     }
 
     @GetMapping("/get-by-course-name")
-    public List<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
-        return studentService.getStudentsByCourseName(courseName, pageable).getContent();
+    public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
+        return studentService.getStudentsByCourseName(courseName, pageable);
     }
 }
