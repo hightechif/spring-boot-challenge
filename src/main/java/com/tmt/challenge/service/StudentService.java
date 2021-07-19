@@ -11,14 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class StudentService {
 
     private final StudentRepo studentRepo;
@@ -93,79 +94,88 @@ public class StudentService {
         student.setStudentIdCard(studentIdCard);
         student.setCourses(courses);
         studentRepo.save(student);
-        return new ResponseDTO("Data Created");
+        return new ResponseDTO("resource created successfully", 201);
     }
 
     // READ All Students
+    @Transactional(readOnly = true)
     public List<StudentDTO> getAllStudents() {
         List<Student> students = studentRepo.findAll();
         return students.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     // READ Student by ID
+    @Transactional(readOnly = true)
     public StudentDTO getStudentById(Long studentId) {
-        Optional<Student> studentOptional = studentRepo.findById(studentId);
-        if (studentOptional.isEmpty()) {
-            throw new IllegalStateException("student with id " + studentId + " does not exist");
-        }
-        return convertToDTO(studentOptional.get());
+        Student student = studentRepo.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
+        return convertToDTO(student);
     }
 
     // READ Student by Email
+    @Transactional(readOnly = true)
     public StudentDTO getStudentByEmail(String email) {
-        Optional<Student> studentOptional = studentRepo.findStudentByEmail(email);
-        if (studentOptional.isEmpty()) {
-            throw new IllegalStateException("student with email " + email + " does not exist");
-        }
-        return convertToDTO(studentOptional.get());
+        Student student = studentRepo.findStudentByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("student with email " + email + " not found"));
+        return convertToDTO(student);
     }
 
     // UPDATE Student
-    @Transactional
     public ResponseDTO updateStudent(Long studentId, String firstName, String lastName) {
         Student student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new IllegalStateException("student with id " + studentId + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
+        ResponseDTO responseDTO = new ResponseDTO();
+        String message = "request success. but, nothing changed";
         if (firstName != null && firstName.length() > 0 && !Objects.equals(student.getFirstName(), firstName)) {
             student.setFirstName(firstName);
+            message = "resource updated successfully";
         }
         if (lastName != null && lastName.length() > 0 && !Objects.equals(student.getLastName(), lastName)) {
             student.setLastName(lastName);
+            message = "resource updated successfully";
         }
-        return new ResponseDTO("Update Success");
+        responseDTO.setMessage(message);
+        return responseDTO;
     }
 
     // DELETE Student
     public ResponseDTO deleteStudent(Long studentId) {
         boolean isStudentExist = studentRepo.existsById(studentId);
-        if (!isStudentExist) {
-            throw new IllegalStateException("student with id " + studentId + " does not exist");
+        ResponseDTO responseDTO = new ResponseDTO();
+        if (isStudentExist) {
+            studentRepo.deleteById(studentId);
+            responseDTO.setStatus(202);
+            responseDTO.setMessage("resource deleted successfully");
+        } else {
+            throw new ResourceNotFoundException("student with id " + studentId + " not found");
         }
-        studentRepo.deleteById(studentId);
-        return new ResponseDTO("Delete Success");
+        return responseDTO;
     }
 
     // READ Student by Card Number
+    @Transactional(readOnly = true)
     public StudentDTO getStudentByCardNumber(String cardNumber) {
-        Optional<Student> studentOptional = studentRepo.findStudentByStudentIdCardCardNumber(cardNumber);
-        if (studentOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Student ID with cardNumber " + cardNumber + " not found");
-        }
-        return convertToDTO(studentOptional.get());
+        Student student = studentRepo.findStudentByStudentIdCardCardNumber(cardNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("student ID with cardNumber " + cardNumber + " not found"));
+        return convertToDTO(student);
     }
 
     // READ Student by Department
+    @Transactional(readOnly = true)
     public List<StudentDTO> getStudentByDepartment(String department) {
         List<Student> studentList = studentRepo.findStudentByCoursesDepartment(department);
         return studentList.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     // READ Students by Book Name
+    @Transactional(readOnly = true)
     public Page<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
         Page<Student> studentPage = studentRepo.findStudentsByBookName(bookName, pageable);
         return studentPage.map(this::convertToDTO);
     }
 
     // READ Students by Course Name
+    @Transactional(readOnly = true)
     public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
         Page<Student> studentPage = studentRepo.findStudentsByCourseName(courseName, pageable);
         return studentPage.map(this::convertToDTO);

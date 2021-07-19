@@ -7,6 +7,8 @@ import com.tmt.challenge.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,54 +25,64 @@ public class StudentController {
     }
 
     @PostMapping("/create-new")
-    public ResponseDTO addNewStudent(@RequestBody StudentRequestDTO studentRequest) {
-        return studentService.addNewStudent(studentRequest);
+    public ResponseEntity<ResponseDTO> addNewStudent(@RequestBody StudentRequestDTO studentRequest) {
+        ResponseDTO responseDTO = studentService.addNewStudent(studentRequest);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all")
-    public List<StudentDTO> getAllStudents() {
-        return studentService.getAllStudents();
+    public ResponseEntity<List<StudentDTO>> getAllStudents() {
+        List<StudentDTO> studentDTOs = studentService.getAllStudents();
+        return new ResponseEntity<>(studentDTOs, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{studentId}")
-    public StudentDTO getStudentById(@PathVariable("studentId") Long studentId) {
-        return studentService.getStudentById(studentId);
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable("studentId") Long studentId) {
+        StudentDTO studentDTO = studentService.getStudentById(studentId);
+        return new ResponseEntity<>(studentDTO, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public StudentDTO getStudentByEmail(@RequestParam String email) {
-        return studentService.getStudentByEmail(email);
+    public ResponseEntity<StudentDTO> getStudentByEmail(@RequestParam String email) {
+        StudentDTO studentDTO = studentService.getStudentByEmail(email);
+        return new ResponseEntity<>(studentDTO, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-card-number")
-    public StudentDTO getStudentByCardNumber(@RequestParam String cardNumber) {
-        return studentService.getStudentByCardNumber(cardNumber);
+    public ResponseEntity<StudentDTO> getStudentByCardNumber(@RequestParam String cardNumber) {
+        StudentDTO responseDTO = studentService.getStudentByCardNumber(cardNumber);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-department")
-    public List<StudentDTO> getStudentByDepartment(@RequestParam String department) {
-        return studentService.getStudentByDepartment(department);
+    public ResponseEntity<List<StudentDTO>> getStudentByDepartment(@RequestParam String department) {
+        List<StudentDTO> responseDTO = studentService.getStudentByDepartment(department);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @PutMapping("/edit/{studentId}")
-    public ResponseDTO updateStudent(@PathVariable("studentId") Long studentId,
-                                     @RequestParam(required = false) String firstName,
-                                     @RequestParam(required = false) String lastName) {
-        return studentService.updateStudent(studentId, firstName, lastName);
+    public ResponseEntity<ResponseDTO> updateStudent(@PathVariable("studentId") Long studentId,
+                                                     @RequestParam(required = false) String firstName,
+                                                     @RequestParam(required = false) String lastName) {
+        ResponseDTO responseDTO = studentService.updateStudent(studentId, firstName, lastName);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{studentId}")
-    public ResponseDTO deleteStudent(@PathVariable("studentId") Long studentId) {
-        return studentService.deleteStudent(studentId);
+    public ResponseEntity<ResponseDTO> deleteStudent(@PathVariable("studentId") Long studentId) {
+        ResponseDTO responseDTO = studentService.deleteStudent(studentId);
+        return new ResponseEntity<>(responseDTO, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-by-book-name")
-    public Page<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
-        return studentService.getStudentsByBookName(bookName, pageable);
+    public ResponseEntity<Page<StudentDTO>> getStudentsByBookName(String bookName, Pageable pageable) {
+        Page<StudentDTO> responseDTO = studentService.getStudentsByBookName(bookName, pageable);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-course-name")
-    public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
-        return studentService.getStudentsByCourseName(courseName, pageable);
+    public ResponseEntity<Page<StudentDTO>> getStudentsByCourseName(String courseName, Pageable pageable) {
+        Page<StudentDTO> responseDTO = studentService.getStudentsByCourseName(courseName, pageable);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }
