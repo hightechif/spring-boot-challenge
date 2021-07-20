@@ -1,5 +1,7 @@
 package com.tmt.challenge.service;
 
+import com.tmt.challenge.constant.enums.Operator;
+import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.dto.*;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.model.Book;
@@ -7,6 +9,8 @@ import com.tmt.challenge.model.Course;
 import com.tmt.challenge.model.Student;
 import com.tmt.challenge.model.StudentIdCard;
 import com.tmt.challenge.repository.StudentRepo;
+import com.tmt.challenge.repository.specs.SearchCriteria;
+import com.tmt.challenge.repository.specs.StudentSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +58,16 @@ public class StudentService {
                 .collect(Collectors.toList());
         studentDTO.setCourses(courses);
         return studentDTO;
+    }
+
+    // Student Specs private method
+    private StudentSpecification studentSpecification(String keyword) {
+        StudentSpecification studentSpecification = new StudentSpecification();
+        studentSpecification.add(new SearchCriteria("email", keyword, SearchOperation.MATCH));
+        studentSpecification.add(new SearchCriteria("firstName", keyword, SearchOperation.MATCH));
+        studentSpecification.add(new SearchCriteria("lastName", keyword, SearchOperation.MATCH));
+        studentSpecification.operator(Operator.OR);
+        return studentSpecification;
     }
 
     // CREATE New Student
@@ -179,5 +193,11 @@ public class StudentService {
     public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
         Page<Student> studentPage = studentRepo.findStudentsByCourseName(courseName, pageable);
         return studentPage.map(this::convertToDTO);
+    }
+
+    // SEARCH keyword
+    @Transactional(readOnly = true)
+    public Page<StudentDTO> search(String keyword, Pageable pageable) {
+        return studentRepo.findAll(studentSpecification(keyword), pageable).map(this::convertToDTO);
     }
 }

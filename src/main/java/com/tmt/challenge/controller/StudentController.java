@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/students")
@@ -84,5 +85,17 @@ public class StudentController {
     public ResponseEntity<Page<StudentDTO>> getStudentsByCourseName(String courseName, Pageable pageable) {
         Page<StudentDTO> responseDTO = studentService.getStudentsByCourseName(courseName, pageable);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET /students/search} : search all students
+     * @param keyword the keyword for filter student
+     * @param pageable the pagination information
+     *
+     * */
+    @GetMapping("/search")
+    public ResponseEntity<Page<StudentDTO>> search(@RequestParam Optional<String> keyword, Pageable pageable) {
+        Page<StudentDTO> response = studentService.search(keyword.orElse(""), pageable);
+        return ResponseEntity.ok().body(response);
     }
 }
