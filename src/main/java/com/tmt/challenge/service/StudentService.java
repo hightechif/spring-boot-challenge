@@ -63,9 +63,9 @@ public class StudentService {
     // Student Specs private method
     private StudentSpecification studentSpecification(String keyword) {
         StudentSpecification studentSpecification = new StudentSpecification();
-        studentSpecification.add(new SearchCriteria("email", keyword, SearchOperation.MATCH));
-        studentSpecification.add(new SearchCriteria("firstName", keyword, SearchOperation.MATCH));
-        studentSpecification.add(new SearchCriteria("lastName", keyword, SearchOperation.MATCH));
+        studentSpecification.add(new SearchCriteria("email", keyword, SearchOperation.MATCH, null, null, null));
+        studentSpecification.add(new SearchCriteria("firstName", keyword, SearchOperation.MATCH, null, null, null));
+        studentSpecification.add(new SearchCriteria("lastName", keyword, SearchOperation.MATCH, null, null, null));
         studentSpecification.operator(Operator.OR);
         return studentSpecification;
     }

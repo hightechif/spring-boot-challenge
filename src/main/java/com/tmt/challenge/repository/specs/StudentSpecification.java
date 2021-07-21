@@ -12,8 +12,6 @@ import java.util.List;
 
 public class StudentSpecification implements Specification<Student> {
 
-    private static final long serialVersionUID = 6385144354864925522L;
-
     private List<SearchCriteria> list;
 
     private Operator operator;

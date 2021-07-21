@@ -2,12 +2,8 @@ package com.tmt.challenge.repository.specs;
 
 import com.tmt.challenge.constant.enums.SearchOperation;
 
-import java.io.Serializable;
-
-public class SearchCriteria implements Serializable {
+public class SearchCriteria {
     // Attributes
-    private static final long serialVersionUID = -3710239820092569369L;
-
     private String key;
     private Object value;
     private SearchOperation operation;
@@ -19,11 +15,13 @@ public class SearchCriteria implements Serializable {
     public SearchCriteria() {
     }
 
-    // Constructor with parameters
-    public SearchCriteria(String key, Object value, SearchOperation operation) {
+    public SearchCriteria(String key, Object value, SearchOperation operation, String joinColumnName, Object startDate, Object endDate) {
         this.key = key;
         this.value = value;
         this.operation = operation;
+        this.joinColumnName = joinColumnName;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     // Getter and Setter
