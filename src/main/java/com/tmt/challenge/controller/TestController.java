@@ -27,6 +27,9 @@ public class TestController {
     private static final String REGISTRATION_URL = "http://localhost:8080/register";
     private static final String AUTHENTICATION_URL = "http://localhost:8080/authenticate";
     private static final String HELLO_URL = "http://localhost:8080/helloadmin";
+    private static final String REFRESH_TOKEN = "http://localhost:8080/refreshtoken";
+
+    private String token;
 
     @RequestMapping(value = "/getResponse", method = RequestMethod.GET)
     public String getResponse() throws JsonProcessingException {
@@ -75,9 +78,47 @@ public class TestController {
                 }
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            // check if exception is due to ExpiredJwtException
+            if (ex.getMessage().contains("io.jsonwebtoken.ExpiredJwtException")) {
+                // Refresh Token
+                refreshToken();
+                // try again with refresh token
+                response = getData();
+            }else {
+                System.out.println(ex);
+            }
         }
         return response;
+    }
+
+    private String getData() {
+        String response = null;
+
+        HttpHeaders headers = getHeaders();
+        headers.set("Authorization", token);
+        HttpEntity<String> jwtEntity = new HttpEntity<String>(headers);
+        // Use Token to get Response
+        ResponseEntity<String> helloResponse = restTemplate.exchange(HELLO_URL, HttpMethod.GET, jwtEntity,
+                String.class);
+        if (helloResponse.getStatusCode().equals(HttpStatus.OK)) {
+            response = helloResponse.getBody();
+        }
+        return response;
+
+    }
+
+    private void refreshToken() {
+        HttpHeaders headers = getHeaders();
+        headers.set("Authorization", token);
+        headers.set("isRefreshToken", "true");
+        HttpEntity<String> jwtEntity = new HttpEntity<String>(headers);
+        // Use Token to get Response
+        ResponseEntity<ResponseToken> refreshTokenResponse = restTemplate.exchange(REFRESH_TOKEN, HttpMethod.GET, jwtEntity,
+                ResponseToken.class);
+        if (refreshTokenResponse.getStatusCode().equals(HttpStatus.OK)) {
+            token = "Bearer " +refreshTokenResponse.getBody().getToken();
+        }
+
     }
 
     private RegristrationUser getRegistrationUser() {
