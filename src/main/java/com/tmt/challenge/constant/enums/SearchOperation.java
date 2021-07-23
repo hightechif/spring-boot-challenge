@@ -14,5 +14,5 @@ public enum SearchOperation {
     NOT_IN,
     DATE_GREATER_THAN_EQUAL,
     DATE_LESS_THAN_EQUAL,
-    DATE_BETWEEN;
+    DATE_BETWEEN
 }

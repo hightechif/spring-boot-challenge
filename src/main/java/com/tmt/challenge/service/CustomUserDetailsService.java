@@ -1,37 +1,38 @@
-package com.tmt.challenge.config;
-
-import java.util.Arrays;
-import java.util.List;
+package com.tmt.challenge.service;
 
 import com.tmt.challenge.dto.UserDTO;
-import com.tmt.challenge.model.DAOUser;
+import com.tmt.challenge.model.User;
 import com.tmt.challenge.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userDAO;
+    private final UserRepository userRepository;
+    private final PasswordEncoder bcryptEncoder;
 
     @Autowired
-    private PasswordEncoder bcryptEncoder;
+    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder bcryptEncoder) {
+        this.userRepository = userRepository;
+        this.bcryptEncoder = bcryptEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<SimpleGrantedAuthority> roles=null;
+        List<SimpleGrantedAuthority> roles;
 
-        DAOUser user = userDAO.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user != null) {
-            roles = Arrays.asList(new SimpleGrantedAuthority(user.getRole()));
-            return new User(user.getUsername(), user.getPassword(), roles);
+            roles = List.of(new SimpleGrantedAuthority(user.getRole()));
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), roles);
         }
 //        if(username.equals("admin"))
 //        {
@@ -48,12 +49,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         throw new UsernameNotFoundException("User not found with username: " + username);
     }
 
-    public DAOUser save(UserDTO user) {
-        DAOUser newUser = new DAOUser();
+    public User save(UserDTO user) {
+        User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));    // Password Encoding
         newUser.setRole(user.getRole());
-        return userDAO.save(newUser);
+        return userRepository.save(newUser);
     }
 
 }

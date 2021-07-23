@@ -1,17 +1,9 @@
-package com.tmt.challenge.model;
+package com.tmt.challenge.dto;
 
-public class AuthenticationRequest {
+public class UserLoginDTO {
 
     private String username;
     private String password;
-
-    public AuthenticationRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public AuthenticationRequest() {
-    }
 
     public String getUsername() {
         return username;

@@ -1,5 +1,6 @@
 package com.tmt.challenge.config;
 
+import com.tmt.challenge.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,9 +56,11 @@ public class SpringSecurityConfiguration  extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // We don't need CSRF for this example
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/helloadmin").hasRole("ADMIN")
-                .antMatchers("/hellouser").hasAnyRole("ADMIN","USER")
+                .authorizeRequests().antMatchers("/hello-admin").hasRole("ADMIN")
+                .antMatchers("/hello-user").hasAnyRole("ADMIN","USER")
                 .antMatchers("/authenticate", "/register", "/getResponse").permitAll().anyRequest().authenticated()   // set authenticate endpoint to be public access
+                // to use basic auth
+                //.and().httpBasic()
                 // if any exception occurs call this
                 .and().exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler).and().

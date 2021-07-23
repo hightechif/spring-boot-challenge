@@ -1,6 +1,6 @@
-package com.tmt.challenge.model;
+package com.tmt.challenge.dto;
 
-public class RegristrationUser extends User {
+public class RegistrationUserLoginDTO extends UserLoginDTO {
 
     private String role;
 

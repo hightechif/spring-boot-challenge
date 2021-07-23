@@ -36,6 +36,7 @@ public class JwtUtil {
     // generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("desc", "test");
         Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
         if (roles.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             claims.put("isAdmin", true);
@@ -87,11 +88,11 @@ public class JwtUtil {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken).getBody();
         Boolean isAdmin = claims.get("isAdmin", Boolean.class);
         Boolean isUser = claims.get("isUser", Boolean.class);
-        if (isAdmin != null && isAdmin == true) {
-            roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (isAdmin != null && isAdmin) {
+            roles = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
-        if (isUser != null && isUser == true) {
-            roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        if (isUser != null && isUser) {
+            roles = List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
         return roles;
     }

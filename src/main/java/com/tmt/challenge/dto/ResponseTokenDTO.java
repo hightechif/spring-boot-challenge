@@ -1,6 +1,6 @@
-package com.tmt.challenge.model;
+package com.tmt.challenge.dto;
 
-public class ResponseToken {
+public class ResponseTokenDTO {
 
     private String token;
 

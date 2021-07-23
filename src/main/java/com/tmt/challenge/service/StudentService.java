@@ -8,7 +8,7 @@ import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Course;
 import com.tmt.challenge.model.Student;
 import com.tmt.challenge.model.StudentIdCard;
-import com.tmt.challenge.repository.StudentRepo;
+import com.tmt.challenge.repository.StudentRepository;
 import com.tmt.challenge.repository.specs.SearchCriteria;
 import com.tmt.challenge.repository.specs.StudentSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class StudentService {
 
-    private final StudentRepo studentRepo;
+    private final StudentRepository studentRepository;
 
     @Autowired
-    public StudentService(StudentRepo studentRepo) {
-        this.studentRepo = studentRepo;
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
     // Convert to DTO;
@@ -73,7 +73,7 @@ public class StudentService {
     // CREATE New Student
     public ResponseDTO addNewStudent(StudentRequestDTO studentRequest) {
         // Check Student with existing email
-        Optional<Student> studentOptional = studentRepo.findStudentByEmail(studentRequest.getEmail());
+        Optional<Student> studentOptional = studentRepository.findStudentByEmail(studentRequest.getEmail());
         if (studentOptional.isPresent()) {
             throw new IllegalStateException("email already exist");
         }
@@ -107,21 +107,21 @@ public class StudentService {
         student.setBooks(books);
         student.setStudentIdCard(studentIdCard);
         student.setCourses(courses);
-        studentRepo.save(student);
+        studentRepository.save(student);
         return new ResponseDTO("resource created successfully", 201);
     }
 
     // READ All Students
     @Transactional(readOnly = true)
     public List<StudentDTO> getAllStudents() {
-        List<Student> students = studentRepo.findAll();
+        List<Student> students = studentRepository.findAll();
         return students.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     // READ Student by ID
     @Transactional(readOnly = true)
     public StudentDTO getStudentById(Long studentId) {
-        Student student = studentRepo.findById(studentId)
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
         return convertToDTO(student);
     }
@@ -129,14 +129,14 @@ public class StudentService {
     // READ Student by Email
     @Transactional(readOnly = true)
     public StudentDTO getStudentByEmail(String email) {
-        Student student = studentRepo.findStudentByEmail(email)
+        Student student = studentRepository.findStudentByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("student with email " + email + " not found"));
         return convertToDTO(student);
     }
 
     // UPDATE Student
     public ResponseDTO updateStudent(Long studentId, String firstName, String lastName) {
-        Student student = studentRepo.findById(studentId)
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
         ResponseDTO responseDTO = new ResponseDTO();
         String message = "request success. but, nothing changed";
@@ -154,10 +154,10 @@ public class StudentService {
 
     // DELETE Student
     public ResponseDTO deleteStudent(Long studentId) {
-        boolean isStudentExist = studentRepo.existsById(studentId);
+        boolean isStudentExist = studentRepository.existsById(studentId);
         ResponseDTO responseDTO = new ResponseDTO();
         if (isStudentExist) {
-            studentRepo.deleteById(studentId);
+            studentRepository.deleteById(studentId);
             responseDTO.setStatus(202);
             responseDTO.setMessage("resource deleted successfully");
         } else {
@@ -169,7 +169,7 @@ public class StudentService {
     // READ Student by Card Number
     @Transactional(readOnly = true)
     public StudentDTO getStudentByCardNumber(String cardNumber) {
-        Student student = studentRepo.findStudentByStudentIdCardCardNumber(cardNumber)
+        Student student = studentRepository.findStudentByStudentIdCardCardNumber(cardNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("student ID with cardNumber " + cardNumber + " not found"));
         return convertToDTO(student);
     }
@@ -177,27 +177,27 @@ public class StudentService {
     // READ Student by Department
     @Transactional(readOnly = true)
     public List<StudentDTO> getStudentByDepartment(String department) {
-        List<Student> studentList = studentRepo.findStudentByCoursesDepartment(department);
+        List<Student> studentList = studentRepository.findStudentByCoursesDepartment(department);
         return studentList.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     // READ Students by Book Name
     @Transactional(readOnly = true)
     public Page<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
-        Page<Student> studentPage = studentRepo.findStudentsByBookName(bookName, pageable);
+        Page<Student> studentPage = studentRepository.findStudentsByBookName(bookName, pageable);
         return studentPage.map(this::convertToDTO);
     }
 
     // READ Students by Course Name
     @Transactional(readOnly = true)
     public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
-        Page<Student> studentPage = studentRepo.findStudentsByCourseName(courseName, pageable);
+        Page<Student> studentPage = studentRepository.findStudentsByCourseName(courseName, pageable);
         return studentPage.map(this::convertToDTO);
     }
 
     // SEARCH keyword
     @Transactional(readOnly = true)
     public Page<StudentDTO> search(String keyword, Pageable pageable) {
-        return studentRepo.findAll(studentSpecification(keyword), pageable).map(this::convertToDTO);
+        return studentRepository.findAll(studentSpecification(keyword), pageable).map(this::convertToDTO);
     }
 }

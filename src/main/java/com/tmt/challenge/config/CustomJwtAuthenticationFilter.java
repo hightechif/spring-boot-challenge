@@ -23,7 +23,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtil jwtTokenUtil;
+    private JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -34,9 +34,9 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
             // get only the Token
             String jwtToken = extractJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
-                UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
-                        jwtTokenUtil.getRolesFromToken(jwtToken));
+            if (StringUtils.hasText(jwtToken) && jwtUtil.validateToken(jwtToken)) {
+                UserDetails userDetails = new User(jwtUtil.getUsernameFromToken(jwtToken), "",
+                        jwtUtil.getRolesFromToken(jwtToken));
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
@@ -51,7 +51,7 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
             String isRefreshToken = request.getHeader("isRefreshToken");
             String requestURL = request.getRequestURL().toString();
             // allow for Refresh Token creation if following conditions are true.
-            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refreshtoken")) {
+            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh-token")) {
                 allowForRefreshToken(ex, request);
             } else {
                 request.setAttribute("exception", ex);
@@ -82,7 +82,7 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
     private String extractJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
         return null;
     }

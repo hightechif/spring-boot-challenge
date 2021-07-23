@@ -12,7 +12,7 @@ import java.util.List;
 
 public class StudentSpecification implements Specification<Student> {
 
-    private List<SearchCriteria> list;
+    private final List<SearchCriteria> list;
 
     private Operator operator;
 
