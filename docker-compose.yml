@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8
+    ports:
+      - 3306:3306
+    networks:
+      - my-net
+  java-api:
+    container_name: java-api
+    image: java-api:1.0
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_ROOT_PASSWORD=admin123
+    networks:
+      - my-net
+
+networks:
+  my-net:
+    name: my-net
+
