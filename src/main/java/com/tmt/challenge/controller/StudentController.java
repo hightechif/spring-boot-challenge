@@ -43,7 +43,7 @@ public class StudentController {
         return new ResponseEntity<>(studentDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping("/get-by-email")
     public ResponseEntity<StudentDTO> getStudentByEmail(@RequestParam String email) {
         StudentDTO studentDTO = studentService.getStudentByEmail(email);
         return new ResponseEntity<>(studentDTO, HttpStatus.OK);
