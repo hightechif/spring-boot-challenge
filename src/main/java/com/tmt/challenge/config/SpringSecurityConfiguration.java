@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -58,7 +59,9 @@ public class SpringSecurityConfiguration  extends WebSecurityConfigurerAdapter{
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/hello-admin").hasRole("ADMIN")
                 .antMatchers("/hello-user").hasAnyRole("ADMIN","USER")
-                .antMatchers("/v2/api-docs", "/swagger-ui.html", "/swagger-ui", "/springfox", "/swagger-resources/configuration/security", "/swagger-resources/configuration/ui", "/authenticate", "/register", "/getResponse", "/refresh-token").permitAll().anyRequest().authenticated()   // set authenticate endpoint to be public access
+                .antMatchers( "/authenticate", "/register", "/getResponse", "/refresh-token")
+                .permitAll()  // set endpoint to be public access
+                .anyRequest().authenticated()   // set another request to be endpoint to be public access
                 // to use basic auth
                 //.and().httpBasic()
                 // if any exception occurs call this
@@ -74,4 +77,13 @@ public class SpringSecurityConfiguration  extends WebSecurityConfigurerAdapter{
                 UsernamePasswordAuthenticationFilter.class);
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers( "/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
+    }
 }
