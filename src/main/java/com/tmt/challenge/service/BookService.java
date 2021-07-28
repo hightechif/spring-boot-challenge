@@ -1,7 +1,7 @@
 package com.tmt.challenge.service;
 
 import com.tmt.challenge.dto.BookDTO;
-import com.tmt.challenge.dto.ResponseDTO;
+import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.repository.BookRepository;
@@ -52,10 +52,10 @@ public class BookService {
     }
 
     // DELETE Book
-    public ResponseDTO deleteBook(Long studentId, Long bookId) {
+    public DefaultResponseDTO deleteBook(Long studentId, Long bookId) {
         return bookRepository.findByIdAndStudentId(bookId, studentId).map(book -> {
             bookRepository.delete(book);
-            return new ResponseDTO("resource deleted successfully", 202);
+            return new DefaultResponseDTO("resource deleted successfully", 202);
         }).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + bookId + " and studentId " + studentId));
     }
 }

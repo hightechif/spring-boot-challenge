@@ -23,7 +23,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -34,9 +34,9 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
             // get only the Token
             String jwtToken = extractJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwtToken) && jwtUtil.validateToken(jwtToken)) {
-                UserDetails userDetails = new User(jwtUtil.getUsernameFromToken(jwtToken), "",
-                        jwtUtil.getRolesFromToken(jwtToken));
+            if (StringUtils.hasText(jwtToken) && jwtUtils.validateToken(jwtToken)) {
+                UserDetails userDetails = new User(jwtUtils.getUsernameFromToken(jwtToken), "",
+                        jwtUtils.getRolesFromToken(jwtToken));
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

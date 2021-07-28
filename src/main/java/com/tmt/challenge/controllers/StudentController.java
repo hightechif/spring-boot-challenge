@@ -1,8 +1,8 @@
-package com.tmt.challenge.controller;
+package com.tmt.challenge.controllers;
 
-import com.tmt.challenge.dto.ResponseDTO;
+import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.dto.StudentDTO;
-import com.tmt.challenge.dto.StudentRequestDTO;
+import com.tmt.challenge.dto.request.StudentRequestDTO;
 import com.tmt.challenge.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,9 +26,9 @@ public class StudentController {
     }
 
     @PostMapping("/create-new")
-    public ResponseEntity<ResponseDTO> addNewStudent(@RequestBody StudentRequestDTO studentRequest) {
-        ResponseDTO responseDTO = studentService.addNewStudent(studentRequest);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    public ResponseEntity<DefaultResponseDTO> addNewStudent(@RequestBody StudentRequestDTO studentRequest) {
+        DefaultResponseDTO defaultResponseDTO = studentService.addNewStudent(studentRequest);
+        return new ResponseEntity<>(defaultResponseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all")
@@ -43,7 +43,7 @@ public class StudentController {
         return new ResponseEntity<>(studentDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/get-by-email")
+    @GetMapping("/")
     public ResponseEntity<StudentDTO> getStudentByEmail(@RequestParam String email) {
         StudentDTO studentDTO = studentService.getStudentByEmail(email);
         return new ResponseEntity<>(studentDTO, HttpStatus.OK);
@@ -62,17 +62,17 @@ public class StudentController {
     }
 
     @PutMapping("/edit/{studentId}")
-    public ResponseEntity<ResponseDTO> updateStudent(@PathVariable("studentId") Long studentId,
-                                                     @RequestParam(required = false) String firstName,
-                                                     @RequestParam(required = false) String lastName) {
-        ResponseDTO responseDTO = studentService.updateStudent(studentId, firstName, lastName);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    public ResponseEntity<DefaultResponseDTO> updateStudent(@PathVariable("studentId") Long studentId,
+                                                            @RequestParam(required = false) String firstName,
+                                                            @RequestParam(required = false) String lastName) {
+        DefaultResponseDTO defaultResponseDTO = studentService.updateStudent(studentId, firstName, lastName);
+        return new ResponseEntity<>(defaultResponseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{studentId}")
-    public ResponseEntity<ResponseDTO> deleteStudent(@PathVariable("studentId") Long studentId) {
-        ResponseDTO responseDTO = studentService.deleteStudent(studentId);
-        return new ResponseEntity<>(responseDTO, HttpStatus.ACCEPTED);
+    public ResponseEntity<DefaultResponseDTO> deleteStudent(@PathVariable("studentId") Long studentId) {
+        DefaultResponseDTO defaultResponseDTO = studentService.deleteStudent(studentId);
+        return new ResponseEntity<>(defaultResponseDTO, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-by-book-name")

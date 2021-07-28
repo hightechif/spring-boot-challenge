@@ -1,7 +1,7 @@
-package com.tmt.challenge.controller;
+package com.tmt.challenge.controllers;
 
-import com.tmt.challenge.dto.RegistrationUserLoginDTO;
-import com.tmt.challenge.dto.UserLoginDTO;
+import com.tmt.challenge.dto.request.RegistrationUserLoginDTO;
+import com.tmt.challenge.dto.request.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tmt.challenge.dto.ResponseTokenDTO;
+import com.tmt.challenge.dto.response.TokenResponseDTO;
 
 import java.util.Objects;
 
@@ -62,8 +62,8 @@ public class TestController {
                         authenticationHeaders);
 
                 // Authenticate User and get JWT
-                ResponseEntity<ResponseTokenDTO> authenticationResponse = restTemplate.exchange(AUTHENTICATION_URL,
-                        HttpMethod.POST, authenticationEntity, ResponseTokenDTO.class);
+                ResponseEntity<TokenResponseDTO> authenticationResponse = restTemplate.exchange(AUTHENTICATION_URL,
+                        HttpMethod.POST, authenticationEntity, TokenResponseDTO.class);
 
                 // if the authentication is successful
                 if (authenticationResponse.getStatusCode().equals(HttpStatus.OK)) {
@@ -115,8 +115,8 @@ public class TestController {
         headers.set("isRefreshToken", "true");
         HttpEntity<String> jwtEntity = new HttpEntity<>(headers);
         // Use Token to get Response
-        ResponseEntity<ResponseTokenDTO> refreshTokenResponse = restTemplate.exchange(REFRESH_TOKEN, HttpMethod.GET, jwtEntity,
-                ResponseTokenDTO.class);
+        ResponseEntity<TokenResponseDTO> refreshTokenResponse = restTemplate.exchange(REFRESH_TOKEN, HttpMethod.GET, jwtEntity,
+                TokenResponseDTO.class);
         if (refreshTokenResponse.getStatusCode().equals(HttpStatus.OK)) {
             token = "Bearer " + Objects.requireNonNull(refreshTokenResponse.getBody()).getToken();
         }

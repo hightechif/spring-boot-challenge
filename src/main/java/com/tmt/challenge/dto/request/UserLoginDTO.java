@@ -1,4 +1,4 @@
-package com.tmt.challenge.dto;
+package com.tmt.challenge.dto.request;
 
 public class UserLoginDTO {
 

@@ -1,5 +1,8 @@
-package com.tmt.challenge.dto;
+package com.tmt.challenge.dto.request;
 
+import com.tmt.challenge.dto.BookDTO;
+import com.tmt.challenge.dto.CourseDTO;
+import com.tmt.challenge.dto.StudentIdCardDTO;
 import com.tmt.challenge.model.Student;
 
 import java.time.LocalDate;

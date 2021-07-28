@@ -3,6 +3,8 @@ package com.tmt.challenge.service;
 import com.tmt.challenge.constant.enums.Operator;
 import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.dto.*;
+import com.tmt.challenge.dto.request.StudentRequestDTO;
+import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Course;
@@ -71,7 +73,7 @@ public class StudentService {
     }
 
     // CREATE New Student
-    public ResponseDTO addNewStudent(StudentRequestDTO studentRequest) {
+    public DefaultResponseDTO addNewStudent(StudentRequestDTO studentRequest) {
         // Check Student with existing email
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(studentRequest.getEmail());
         if (studentOptional.isPresent()) {
@@ -108,7 +110,7 @@ public class StudentService {
         student.setStudentIdCard(studentIdCard);
         student.setCourses(courses);
         studentRepository.save(student);
-        return new ResponseDTO("resource created successfully", 201);
+        return new DefaultResponseDTO("resource created successfully", 201);
     }
 
     // READ All Students
@@ -135,10 +137,10 @@ public class StudentService {
     }
 
     // UPDATE Student
-    public ResponseDTO updateStudent(Long studentId, String firstName, String lastName) {
+    public DefaultResponseDTO updateStudent(Long studentId, String firstName, String lastName) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
-        ResponseDTO responseDTO = new ResponseDTO();
+        DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         String message = "request success. but, nothing changed";
         if (firstName != null && firstName.length() > 0 && !Objects.equals(student.getFirstName(), firstName)) {
             student.setFirstName(firstName);
@@ -148,22 +150,22 @@ public class StudentService {
             student.setLastName(lastName);
             message = "resource updated successfully";
         }
-        responseDTO.setMessage(message);
-        return responseDTO;
+        defaultResponseDTO.setMessage(message);
+        return defaultResponseDTO;
     }
 
     // DELETE Student
-    public ResponseDTO deleteStudent(Long studentId) {
+    public DefaultResponseDTO deleteStudent(Long studentId) {
         boolean isStudentExist = studentRepository.existsById(studentId);
-        ResponseDTO responseDTO = new ResponseDTO();
+        DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         if (isStudentExist) {
             studentRepository.deleteById(studentId);
-            responseDTO.setStatus(202);
-            responseDTO.setMessage("resource deleted successfully");
+            defaultResponseDTO.setStatus(202);
+            defaultResponseDTO.setMessage("resource deleted successfully");
         } else {
             throw new ResourceNotFoundException("student with id " + studentId + " not found");
         }
-        return responseDTO;
+        return defaultResponseDTO;
     }
 
     // READ Student by Card Number

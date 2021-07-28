@@ -1,7 +1,7 @@
-package com.tmt.challenge.controller;
+package com.tmt.challenge.controllers;
 
 import com.tmt.challenge.dto.BookDTO;
-import com.tmt.challenge.dto.ResponseDTO;
+import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +40,9 @@ public class BookController {
     }
 
     @DeleteMapping("/students/{studentId}/books/delete/{bookId}")
-    public ResponseEntity<ResponseDTO> deleteBook(@PathVariable(value = "studentId") Long studentId,
-                                                  @PathVariable(value = "bookId") Long bookId) {
-        ResponseDTO responseDTO = bookService.deleteBook(studentId, bookId);
-        return new ResponseEntity<>(responseDTO, HttpStatus.ACCEPTED);
+    public ResponseEntity<DefaultResponseDTO> deleteBook(@PathVariable(value = "studentId") Long studentId,
+                                                         @PathVariable(value = "bookId") Long bookId) {
+        DefaultResponseDTO defaultResponseDTO = bookService.deleteBook(studentId, bookId);
+        return new ResponseEntity<>(defaultResponseDTO, HttpStatus.ACCEPTED);
     }
 }
