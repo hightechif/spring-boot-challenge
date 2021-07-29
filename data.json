@@ -1,0 +1,220 @@
+[
+    {
+        "firstName": "Nur",
+        "lastName": "Fathurrahaman",
+        "email": "nur.fathurrahman@yopmail.com",
+        "dateOfBirth": "1998-04-28",
+        "books": [
+                {
+                    "bookName": "How to make friend and influence people"
+                },
+                {
+                    "bookName": "Think and Grow Rich"
+                }
+                
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197002"
+        },
+        "courses" : [
+            {
+                "name" : "Python Programming",
+                "department": "Informatics"
+            },
+            {
+                "name" : "Statistics",
+                "department": "Mathematics"
+            }
+        ]
+    },
+    {
+        "firstName": "Najmi",
+        "lastName": "Jamal",
+        "email": "najmi.jamal@yopmail.com",
+        "dateOfBirth": "1997-05-07",
+        "books": [
+                {
+                    "bookName": "Start with why"
+                }
+                
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197003"
+        },
+        "courses" : [
+            {
+                "name" : "French Language",
+                "department": "Literature"
+            }
+        ]
+    },
+    {
+        "firstName": "Habibul",
+        "lastName": "Chair",
+        "email": "habibul.chair@yopmail.com",
+        "dateOfBirth": "1997-05-06",
+        "books": [
+                {
+                    "bookName": "Leave me or love me"
+                }
+                
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197004"
+        },
+        "courses" : [
+            {
+                "name" : "Stress Management",
+                "department": "Psychology"
+            },
+            {
+                "name" : "Human Behaviour",
+                "department": "Psychology"
+            }
+        ]
+    },
+    {
+        "firstName": "Hammam",
+        "lastName": "Izzudin",
+        "email": "hammam.izzudin@yopmail.com",
+        "dateOfBirth": "1997-06-14",
+        "books": [
+                {
+                    "bookName": "Homo deus"
+                },
+                {
+                    "bookName": "The Dark Knight"
+                }
+                
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197005"
+        },
+        "courses" : [
+            {
+                "name" : "Nuclear Safety",
+                "department": "Nuclear Engineering"
+            },
+            {
+                "name" : "Radioisotop",
+                "department": "Nuclear Engineering"
+            }
+        ]
+    },
+    {
+        "firstName": "Ega",
+        "lastName": "Sayan",
+        "email": "ega.sayan@yopmail.com",
+        "dateOfBirth": "1995-2-22",
+        "books": [
+                {
+                    "bookName": "Atomic Habit"
+                }
+                
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197006"
+        },
+        "courses" : [
+            {
+                "name" : "Radioisotop",
+                "department": "Nuclear Engineering"
+            }
+        ]
+    },
+    {
+        "firstName": "Intan",
+        "lastName": "Fadhilah",
+        "email": "intan.fadhilah@yopmail.com",
+        "dateOfBirth": "1997-12-13",
+        "books": [
+                {
+                    "bookName": "Kembali ke surga"
+                }
+                
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197007"
+        },
+        "courses" : [
+            {
+                "name" : "French Poets",
+                "department": "Literature"
+            }
+        ]
+    },
+    {
+        "firstName": "Ridhan",
+        "lastName": "Jaeger",
+        "email": "ridhan.jaeger@yopmail.com",
+        "dateOfBirth": "1991-3-27",
+        "books": [
+                {
+                    "bookName": "Menangkap ubur-ubur"
+                },
+                {
+                    "bookName": "Memasak krabby patty"
+                }
+                
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197008"
+        },
+        "courses" : [
+            {
+                "name" : "Fast Food",
+                "department": "Culinary"
+            }
+        ]
+    },
+    {
+        "firstName": "Patrick",
+        "lastName": "Star",
+        "email": "patrick.star@yopmail.com",
+        "dateOfBirth": "1999-02-23",
+        "books": [
+            {
+                "bookName" : "Menjadi seorang Fadhilah"
+            }
+        ],
+        "studentIdCard" : {
+            "cardNumber": "120197009"
+        },
+        "courses" : [
+            {
+                "name" : "Singing",
+                "department": "Musics"
+            }
+        ]
+    },
+    {
+        "firstName": "Eren",
+        "lastName": "Jaeger",
+        "email": "eren.jaeger@yopmail.com",
+        "dateOfBirth": "1997-01-12",
+        "books": [
+                {
+                    "bookName": "Eldia History"
+                },
+                {
+                    "bookName": "Manuver Gear"
+                },
+                {
+                    "bookName": "Ridhan Fadhilah"
+                }
+            ],
+        "studentIdCard" : {
+            "cardNumber": "120197010"
+        },
+        "courses" : [
+            {
+                "name" : "Singing",
+                "department": "Musics"
+            },
+            {
+                "name" : "Titan Anatomy",
+                "department": "Biology"
+            }
+        ]
+    }
+]
