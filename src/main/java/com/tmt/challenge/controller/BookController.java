@@ -2,6 +2,7 @@ package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.dto.BookWithStudentDTO;
+import com.tmt.challenge.dto.StudentDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.service.BookService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/")
@@ -58,5 +60,17 @@ public class BookController {
     public ResponseEntity<BookWithStudentDTO> getBookById(@PathVariable(value = "bookId") Long bookId) {
         BookWithStudentDTO response = bookService.getBookById(bookId);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * {@code GET /books/search} : search all books from related keyword
+     * @param keyword the keyword for filter bookName, firstName, lastName, and/or email
+     * @param pageable the pagination information
+     *
+     * */
+    @GetMapping("/books/search")
+    public ResponseEntity<Page<BookWithStudentDTO>> search(@RequestParam Optional<String> keyword, Pageable pageable) {
+        Page<BookWithStudentDTO> response = bookService.search(keyword.orElse(""), pageable);
+        return ResponseEntity.ok().body(response);
     }
 }
