@@ -1,10 +1,12 @@
 package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.BookDTO;
+import com.tmt.challenge.dto.BookWithStudentDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +44,19 @@ public class BookController {
     @DeleteMapping("/students/{studentId}/books/delete/{bookId}")
     public ResponseEntity<DefaultResponseDTO> deleteBook(@PathVariable(value = "studentId") Long studentId,
                                                          @PathVariable(value = "bookId") Long bookId) {
-        DefaultResponseDTO defaultResponseDTO = bookService.deleteBook(studentId, bookId);
-        return new ResponseEntity<>(defaultResponseDTO, HttpStatus.ACCEPTED);
+        DefaultResponseDTO response = bookService.deleteBook(studentId, bookId);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/books")
+    public ResponseEntity<Page<BookWithStudentDTO>> getAllBooks(Pageable pageable) {
+        Page<BookWithStudentDTO> response = bookService.getAllBooks(pageable);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/book/{bookId}")
+    public ResponseEntity<BookWithStudentDTO> getBookById(@PathVariable(value = "bookId") Long bookId) {
+        BookWithStudentDTO response = bookService.getBookById(bookId);
+        return ResponseEntity.ok(response);
     }
 }
