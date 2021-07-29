@@ -1,4 +1,4 @@
-package com.tmt.challenge.service;
+package com.tmt.challenge.service.security;
 
 import com.tmt.challenge.dto.UserDTO;
 import com.tmt.challenge.model.User;

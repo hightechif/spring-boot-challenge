@@ -1,4 +1,4 @@
-package com.tmt.challenge.security.services;
+package com.tmt.challenge.service.security;
 
 import java.time.Instant;
 import java.util.Optional;

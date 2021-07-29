@@ -1,4 +1,4 @@
-package com.tmt.challenge.controllers;
+package com.tmt.challenge.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

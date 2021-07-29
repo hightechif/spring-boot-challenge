@@ -1,6 +1,6 @@
 package com.tmt.challenge.config;
 
-import com.tmt.challenge.service.CustomUserDetailsService;
+import com.tmt.challenge.service.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

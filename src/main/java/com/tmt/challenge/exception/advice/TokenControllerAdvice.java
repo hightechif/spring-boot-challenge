@@ -1,4 +1,4 @@
-package com.tmt.challenge.advice;
+package com.tmt.challenge.exception.advice;
 
 import java.util.Date;
 

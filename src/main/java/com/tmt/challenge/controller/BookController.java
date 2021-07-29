@@ -1,4 +1,4 @@
-package com.tmt.challenge.controllers;
+package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;

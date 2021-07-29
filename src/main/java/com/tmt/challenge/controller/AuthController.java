@@ -1,4 +1,4 @@
-package com.tmt.challenge.controllers;
+package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.UserDTO;
 import com.tmt.challenge.dto.request.TokenRefreshRequestDTO;
@@ -7,27 +7,22 @@ import com.tmt.challenge.dto.response.JwtResponseDTO;
 import com.tmt.challenge.dto.response.TokenRefreshResponseDTO;
 import com.tmt.challenge.exception.TokenRefreshException;
 import com.tmt.challenge.model.RefreshToken;
-import com.tmt.challenge.security.services.RefreshTokenService;
+import com.tmt.challenge.service.security.RefreshTokenService;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tmt.challenge.service.CustomUserDetailsService;
+import com.tmt.challenge.service.security.CustomUserDetailsService;
 import com.tmt.challenge.config.JwtUtils;
-import com.tmt.challenge.dto.response.AuthenticationResponseDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
