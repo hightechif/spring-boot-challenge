@@ -4,30 +4,27 @@ import com.tmt.challenge.constant.enums.Operator;
 import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.dto.BookWithStudentDTO;
-import com.tmt.challenge.dto.StudentDTO;
 import com.tmt.challenge.dto.StudentOnlyDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
+import com.tmt.challenge.mapper.BookMapper;
+import com.tmt.challenge.mapper.StudentMapper;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Student;
 import com.tmt.challenge.repository.BookRepository;
 import com.tmt.challenge.repository.StudentRepository;
 import com.tmt.challenge.repository.specs.BookSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
-import com.tmt.challenge.repository.specs.StudentSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -35,43 +32,15 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final StudentRepository studentRepository;
+    private final BookMapper bookMapper;
+    private final StudentMapper studentMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, StudentRepository studentRepository) {
+    public BookService(BookRepository bookRepository, StudentRepository studentRepository, BookMapper bookMapper, StudentMapper studentMapper) {
         this.bookRepository = bookRepository;
         this.studentRepository = studentRepository;
-    }
-
-    // Convert Book to BookDTO
-    private BookDTO convertToDTO(Book book) {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setId(book.getId());
-        bookDTO.setBookName(book.getBookName());
-        bookDTO.setCreatedAt(book.getCreatedAt());
-        return bookDTO;
-    }
-
-    // Convert Book to BookWithStudentDTO
-    private BookWithStudentDTO convertToBookDTO(Book book) {
-        // Instantiate new BookWithStudentDTO
-        BookWithStudentDTO bookWithStudentDTO = new BookWithStudentDTO();
-        bookWithStudentDTO.setId(book.getId());
-        bookWithStudentDTO.setBookName(book.getBookName());
-        bookWithStudentDTO.setCreatedAt(book.getCreatedAt());
-        StudentOnlyDTO studentOnly = this.convertToStudentOnlyDTO(book.getStudent());
-        bookWithStudentDTO.setStudents(List.of(studentOnly));
-        return bookWithStudentDTO;
-    }
-
-    // Convert Student to StudentOnlyDTO
-    private StudentOnlyDTO convertToStudentOnlyDTO(Student student) {
-        StudentOnlyDTO studentOnlyDTO = new StudentOnlyDTO();
-        studentOnlyDTO.setId(student.getId());
-        studentOnlyDTO.setFirstName(student.getFirstName());
-        studentOnlyDTO.setLastName(student.getLastName());
-        studentOnlyDTO.setEmail(student.getEmail());
-        studentOnlyDTO.setAge(student.getAge());
-        return studentOnlyDTO;
+        this.bookMapper = bookMapper;
+        this.studentMapper = studentMapper;
     }
 
     // Book Specs private method
@@ -89,7 +58,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<BookDTO> getAllBooksByStudentId(Long studentId, Pageable pageable) {
         Page<Book> bookPage = bookRepository.findByStudentId(studentId, pageable);
-        return bookPage.map(this::convertToDTO);
+        return bookPage.map(bookMapper::toBookDTO);
     }
 
     // UPDATE Book
@@ -102,7 +71,7 @@ public class BookService {
             book.setBookName(bookRequest.getBookName());
             return bookRepository.save(book);
         }).orElseThrow(() -> new ResourceNotFoundException("BookId " + bookId + " not found"));
-        return convertToDTO(bookResponse);
+        return bookMapper.toBookDTO(bookResponse);
     }
 
     // DELETE Book
@@ -117,9 +86,9 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> getAllBooks(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
-        List<BookWithStudentDTO> booksWithStudent = booksPage.stream().map(this::convertToBookDTO).collect(Collectors.toList());
-        Page<BookWithStudentDTO> booksOutput = new PageImpl<>(booksWithStudent);
-        return booksOutput;
+        List<Book> bookList = booksPage.toList();
+        List<BookWithStudentDTO> bookWithStudentDTO = bookMapper.toBookWithStudentDTO(bookList);
+        return new PageImpl<>(bookWithStudentDTO);
     }
 
     // GET Book by ID
@@ -131,18 +100,16 @@ public class BookService {
         }
         Book book = bookOptional.get();
         Student student = book.getStudent();
-        BookWithStudentDTO bookOutput = this.convertToBookDTO(book);
-        StudentOnlyDTO studentOutput = this.convertToStudentOnlyDTO(student);
-        bookOutput.setStudents(List.of(studentOutput));
+        BookWithStudentDTO bookOutput = bookMapper.toBookWithStudentDTO(book);
+        StudentOnlyDTO studentOutput = studentMapper.toStudentOnlyDTO(student);
+        bookOutput.setStudent(studentOutput);
         return bookOutput;
     }
 
     // SEARCH Book
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> search(String keyword, Pageable pageable) {
-        List<BookWithStudentDTO> bookResult = bookRepository.findAll(bookSpecification(keyword), pageable).stream().map(this::convertToBookDTO).collect(Collectors.toList());
-
-        PageImpl<BookWithStudentDTO> finalResult = new PageImpl<>(bookResult);
-        return finalResult;
+        List<BookWithStudentDTO> bookResult = bookRepository.findAll(bookSpecification(keyword), pageable).stream().map(bookMapper::toBookWithStudentDTO).collect(Collectors.toList());
+        return new PageImpl<>(bookResult);
     }
 }

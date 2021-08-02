@@ -2,10 +2,14 @@ package com.tmt.challenge.service;
 
 import com.tmt.challenge.constant.enums.Operator;
 import com.tmt.challenge.constant.enums.SearchOperation;
-import com.tmt.challenge.dto.*;
+import com.tmt.challenge.dto.BookDTO;
+import com.tmt.challenge.dto.CourseDTO;
+import com.tmt.challenge.dto.StudentDTO;
+import com.tmt.challenge.dto.StudentIdCardDTO;
 import com.tmt.challenge.dto.request.StudentRequestDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
+import com.tmt.challenge.mapper.StudentMapper;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Course;
 import com.tmt.challenge.model.Student;
@@ -29,37 +33,12 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
         this.studentRepository = studentRepository;
-    }
-
-    // Convert to DTO;
-    private StudentDTO convertToDTO(Student student) {
-        // Generate new StudentDTO Object
-        StudentDTO studentDTO = new StudentDTO();
-        // Set id, firstName, lastName, email, and age
-        studentDTO.setId(student.getId());
-        studentDTO.setFirstName(student.getFirstName());
-        studentDTO.setLastName(student.getLastName());
-        studentDTO.setEmail(student.getEmail());
-        studentDTO.setAge(student.getAge());
-        // Set Collection of Book
-        List<BookDTO> books = student.getBooks().stream().map(x -> new BookDTO(x.getId(), x.getBookName(), x.getCreatedAt()))
-                .collect(Collectors.toList());
-        studentDTO.setBooks(books);
-        // Set cardNumber
-        StudentIdCardDTO studentIdCardDTO = new StudentIdCardDTO();
-        StudentIdCard studentIdCard = student.getStudentIdCard();
-        studentIdCardDTO.setId(studentIdCard.getId());
-        studentIdCardDTO.setCardNumber(studentIdCard.getCardNumber());
-        studentDTO.setStudentIdCard(studentIdCardDTO);
-        // Set Collection of Course
-        List<CourseDTO> courses = student.getCourses().stream().map(x -> new CourseDTO(x.getId(), x.getName(), x.getDepartment()))
-                .collect(Collectors.toList());
-        studentDTO.setCourses(courses);
-        return studentDTO;
+        this.studentMapper = studentMapper;
     }
 
     // Student Specs private method
@@ -117,7 +96,7 @@ public class StudentService {
     @Transactional(readOnly = true)
     public List<StudentDTO> getAllStudents() {
         List<Student> students = studentRepository.findAll();
-        return students.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return students.stream().map(studentMapper::toStudentDTO).collect(Collectors.toList());
     }
 
     // READ Student by ID
@@ -125,7 +104,7 @@ public class StudentService {
     public StudentDTO getStudentById(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
-        return convertToDTO(student);
+        return studentMapper.toStudentDTO(student);
     }
 
     // READ Student by Email
@@ -133,7 +112,7 @@ public class StudentService {
     public StudentDTO getStudentByEmail(String email) {
         Student student = studentRepository.findStudentByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("student with email " + email + " not found"));
-        return convertToDTO(student);
+        return studentMapper.toStudentDTO(student);
     }
 
     // UPDATE Student
@@ -173,33 +152,33 @@ public class StudentService {
     public StudentDTO getStudentByCardNumber(String cardNumber) {
         Student student = studentRepository.findStudentByStudentIdCardCardNumber(cardNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("student ID with cardNumber " + cardNumber + " not found"));
-        return convertToDTO(student);
+        return studentMapper.toStudentDTO(student);
     }
 
     // READ Student by Department
     @Transactional(readOnly = true)
     public List<StudentDTO> getStudentByDepartment(String department) {
         List<Student> studentList = studentRepository.findStudentByCoursesDepartment(department);
-        return studentList.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return studentList.stream().map(studentMapper::toStudentDTO).collect(Collectors.toList());
     }
 
     // READ Students by Book Name
     @Transactional(readOnly = true)
     public Page<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findStudentsByBookName(bookName, pageable);
-        return studentPage.map(this::convertToDTO);
+        return studentPage.map(studentMapper::toStudentDTO);
     }
 
     // READ Students by Course Name
     @Transactional(readOnly = true)
     public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findStudentsByCourseName(courseName, pageable);
-        return studentPage.map(this::convertToDTO);
+        return studentPage.map(studentMapper::toStudentDTO);
     }
 
     // SEARCH keyword
     @Transactional(readOnly = true)
     public Page<StudentDTO> search(String keyword, Pageable pageable) {
-        return studentRepository.findAll(studentSpecification(keyword), pageable).map(this::convertToDTO);
+        return studentRepository.findAll(studentSpecification(keyword), pageable).map(studentMapper::toStudentDTO);
     }
 }

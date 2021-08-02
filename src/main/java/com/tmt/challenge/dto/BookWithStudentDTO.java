@@ -1,27 +1,24 @@
 package com.tmt.challenge.dto;
 
-import com.tmt.challenge.model.Student;
-
 import java.util.Date;
-import java.util.List;
 
 public class BookWithStudentDTO {
     // Attributes
     private Long id;
     private String bookName;
     private Date createdAt;
-    private List<StudentOnlyDTO> students;
+    private StudentOnlyDTO student;
 
     // Empty Constructor
     public BookWithStudentDTO() {
     }
 
     // Constructor with parameters
-    public BookWithStudentDTO(Long id, String bookName, Date createdAt, List<StudentOnlyDTO> students) {
+    public BookWithStudentDTO(Long id, String bookName, Date createdAt, StudentOnlyDTO student) {
         this.id = id;
         this.bookName = bookName;
         this.createdAt = createdAt;
-        this.students = students;
+        this.student = student;
     }
 
     // Getter and Setter
@@ -50,12 +47,12 @@ public class BookWithStudentDTO {
         this.createdAt = createdAt;
     }
 
-    public List<StudentOnlyDTO> getStudents() {
-        return students;
+    public StudentOnlyDTO getStudent() {
+        return student;
     }
 
-    public void setStudents(List<StudentOnlyDTO> students) {
-        this.students = students;
+    public void setStudent(StudentOnlyDTO student) {
+        this.student = student;
     }
 }
 
