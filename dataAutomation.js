@@ -53,6 +53,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -99,6 +101,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -149,6 +153,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -202,6 +208,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -221,7 +229,7 @@ pm.sendRequest({
             "firstName": "Ega",
             "lastName": "Sayan",
             "email": "ega.sayan@yopmail.com",
-            "dateOfBirth": "1995-2-22",
+            "dateOfBirth": "1995-02-22",
             "books": [
                     {
                         "bookName": "Atomic Habit"
@@ -248,6 +256,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -294,6 +304,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -313,7 +325,7 @@ pm.sendRequest({
             "firstName": "Ridhan",
             "lastName": "Jaeger",
             "email": "ridhan.jaeger@yopmail.com",
-            "dateOfBirth": "1991-3-27",
+            "dateOfBirth": "1991-03-27",
             "books": [
                     {
                         "bookName": "Menangkap ubur-ubur"
@@ -343,6 +355,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -388,6 +402,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }
@@ -443,6 +459,8 @@ pm.sendRequest({
             pm.expect(res).to.be.withBody;
             pm.expect(res).to.be.json;
             const responseJson = res.json();
+            pm.expect(responseJson).to.have.property('status', '201');
+            pm.expect(responseJson).to.have.property('message', 'resource created successfully');
             console.log(responseJson)
         })
     }

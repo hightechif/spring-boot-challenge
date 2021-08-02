@@ -105,7 +105,7 @@
         "firstName": "Ega",
         "lastName": "Sayan",
         "email": "ega.sayan@yopmail.com",
-        "dateOfBirth": "1995-2-22",
+        "dateOfBirth": "1995-02-22",
         "books": [
                 {
                     "bookName": "Atomic Habit"
@@ -147,7 +147,7 @@
         "firstName": "Ridhan",
         "lastName": "Jaeger",
         "email": "ridhan.jaeger@yopmail.com",
-        "dateOfBirth": "1991-3-27",
+        "dateOfBirth": "1991-03-27",
         "books": [
                 {
                     "bookName": "Menangkap ubur-ubur"
