@@ -78,18 +78,11 @@ public class BookService {
     private BookSpecification bookSpecification(String keyword) {
         BookSpecification bookSpecification = new BookSpecification();
         bookSpecification.add(new SearchCriteria("bookName", keyword, SearchOperation.MATCH, null, null, null));
+        bookSpecification.add(new SearchCriteria("email", keyword, SearchOperation.MATCH, "student", null, null));
+        bookSpecification.add(new SearchCriteria("firstName", keyword, SearchOperation.MATCH, "student", null, null));
+        bookSpecification.add(new SearchCriteria("lastName", keyword, SearchOperation.MATCH, "student", null, null));
         bookSpecification.operator(Operator.OR);
         return bookSpecification;
-    }
-
-    // Student Specs private method
-    private StudentSpecification studentSpecification(String keyword) {
-        StudentSpecification studentSpecification = new StudentSpecification();
-        studentSpecification.add(new SearchCriteria("email", keyword, SearchOperation.MATCH, null, null, null));
-        studentSpecification.add(new SearchCriteria("firstName", keyword, SearchOperation.MATCH, null, null, null));
-        studentSpecification.add(new SearchCriteria("lastName", keyword, SearchOperation.MATCH, null, null, null));
-        studentSpecification.operator(Operator.OR);
-        return studentSpecification;
     }
 
     // READ All Book by Student ID
@@ -148,22 +141,6 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> search(String keyword, Pageable pageable) {
         List<BookWithStudentDTO> bookResult = bookRepository.findAll(bookSpecification(keyword), pageable).stream().map(this::convertToBookDTO).collect(Collectors.toList());
-        List<Student> studentResult = studentRepository.findAll(studentSpecification(keyword), pageable).toList();
-
-        for (Student s : studentResult) {
-            StudentOnlyDTO studentOnly = this.convertToStudentOnlyDTO(s);
-            for (Book b : s.getBooks()) {
-                BookWithStudentDTO book2ndResult = new BookWithStudentDTO();
-                book2ndResult.setId(b.getId());
-                book2ndResult.setBookName(b.getBookName());
-                if (b.getCreatedAt() != null) {
-                    book2ndResult.setCreatedAt(b.getCreatedAt());
-                }
-                book2ndResult.setStudents(List.of(studentOnly));
-                // Add to result list
-                bookResult.add(book2ndResult);
-            }
-        }
 
         PageImpl<BookWithStudentDTO> finalResult = new PageImpl<>(bookResult);
         return finalResult;
