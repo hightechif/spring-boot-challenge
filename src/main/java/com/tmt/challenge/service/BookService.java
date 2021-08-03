@@ -86,9 +86,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> getAllBooks(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
-        List<Book> bookList = booksPage.toList();
-        List<BookWithStudentDTO> bookWithStudentDTO = bookMapper.toBookWithStudentDTO(bookList);
-        return new PageImpl<>(bookWithStudentDTO);
+        return booksPage.map(bookMapper::toBookWithStudentDTO);
     }
 
     // GET Book by ID
@@ -99,17 +97,14 @@ public class BookService {
             throw new ResourceNotFoundException("Book with id " + bookId + " not found");
         }
         Book book = bookOptional.get();
-        Student student = book.getStudent();
         BookWithStudentDTO bookOutput = bookMapper.toBookWithStudentDTO(book);
-        StudentOnlyDTO studentOutput = studentMapper.toStudentOnlyDTO(student);
-        bookOutput.setStudent(studentOutput);
         return bookOutput;
     }
 
     // SEARCH Book
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> search(String keyword, Pageable pageable) {
-        List<BookWithStudentDTO> bookResult = bookRepository.findAll(bookSpecification(keyword), pageable).stream().map(bookMapper::toBookWithStudentDTO).collect(Collectors.toList());
-        return new PageImpl<>(bookResult);
+        Page<BookWithStudentDTO> bookResult = bookRepository.findAll(bookSpecification(keyword), pageable).map(bookMapper::toBookWithStudentDTO);
+        return bookResult;
     }
 }

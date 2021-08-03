@@ -96,7 +96,7 @@ public class StudentService {
     @Transactional(readOnly = true)
     public List<StudentDTO> getAllStudents() {
         List<Student> students = studentRepository.findAll();
-        return students.stream().map(studentMapper::toStudentDTO).collect(Collectors.toList());
+        return studentMapper.toStudentDTO(students);
     }
 
     // READ Student by ID
@@ -159,7 +159,7 @@ public class StudentService {
     @Transactional(readOnly = true)
     public List<StudentDTO> getStudentByDepartment(String department) {
         List<Student> studentList = studentRepository.findStudentByCoursesDepartment(department);
-        return studentList.stream().map(studentMapper::toStudentDTO).collect(Collectors.toList());
+        return studentMapper.toStudentDTO(studentList);
     }
 
     // READ Students by Book Name

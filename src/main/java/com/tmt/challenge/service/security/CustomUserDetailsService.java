@@ -1,6 +1,7 @@
 package com.tmt.challenge.service.security;
 
 import com.tmt.challenge.dto.UserDTO;
+import com.tmt.challenge.mapper.UserMapper;
 import com.tmt.challenge.model.User;
 import com.tmt.challenge.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder bcryptEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder bcryptEncoder) {
+    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder bcryptEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.bcryptEncoder = bcryptEncoder;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -50,10 +53,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public User save(UserDTO user) {
-        User newUser = new User();
-        newUser.setUsername(user.getUsername());
+        User newUser = userMapper.toUserEntity(user);
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));    // Password Encoding
-        newUser.setRole(user.getRole());
         return userRepository.save(newUser);
     }
 
