@@ -8,9 +8,11 @@ import com.tmt.challenge.model.Account;
 import com.tmt.challenge.model.AccountId;
 import com.tmt.challenge.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.http.HttpClient;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -58,6 +60,7 @@ public class AccountService {
             account.setBalance(balance);
             message = "resource updated successfully";
         }
+        defaultResponseDTO.setStatus(HttpStatus.ACCEPTED.value());
         defaultResponseDTO.setMessage(message);
         return defaultResponseDTO;
     }
@@ -68,7 +71,7 @@ public class AccountService {
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         if (isAccountExist) {
             accountRepository.deleteById(accountId);
-            defaultResponseDTO.setStatus(202);
+            defaultResponseDTO.setStatus(HttpStatus.ACCEPTED.value());
             defaultResponseDTO.setMessage("resource deleted successfully");
         } else {
             throw new ResourceNotFoundException("account not found");

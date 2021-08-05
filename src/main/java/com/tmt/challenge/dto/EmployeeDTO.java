@@ -1,19 +1,26 @@
 package com.tmt.challenge.dto;
 
-import com.tmt.challenge.model.EmployeeId;
-
 public class EmployeeDTO {
 
-    private EmployeeId employeeId;
+    private Long departmentId;
+    private Long employeeId;
     private String email;
     private String name;
     private String phoneNumber;
 
-    public EmployeeId getEmployeeId() {
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(EmployeeId employeeId) {
+    public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
     }
 

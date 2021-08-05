@@ -24,7 +24,7 @@ public class EmployeeController {
 
     @PostMapping("/create")
     public ResponseEntity<EmployeeDTO> create(@RequestBody EmployeeDTO employeeDTO) {
-        return ResponseEntity.created(URI.create("/create/" + employeeDTO.getEmployeeId().getEmployeeId())).body(employeeService.create(employeeDTO));
+        return ResponseEntity.created(URI.create("/create/")).body(employeeService.create(employeeDTO));
     }
 
     @GetMapping("/get-all")
@@ -50,7 +50,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/delete/{departmentId}/{employeeId}")
-    public ResponseEntity<DefaultResponseDTO> updateById(@PathVariable(value = "departmentId") Long departmentId,
+    public ResponseEntity<DefaultResponseDTO> deleteById(@PathVariable(value = "departmentId") Long departmentId,
                                                          @PathVariable(value = "employeeId") Long employeeId) {
         DefaultResponseDTO response = employeeService.deleteById(departmentId, employeeId);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);

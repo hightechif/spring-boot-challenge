@@ -8,6 +8,7 @@ import com.tmt.challenge.model.Employee;
 import com.tmt.challenge.model.EmployeeId;
 import com.tmt.challenge.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +63,7 @@ public class EmployeeService {
             employee.setPhoneNumber(phoneNumber);
             message = "resource updated successfully";
         }
+        defaultResponseDTO.setStatus(HttpStatus.ACCEPTED.value());
         defaultResponseDTO.setMessage(message);
         return defaultResponseDTO;
     }
@@ -72,7 +74,7 @@ public class EmployeeService {
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         if (isEmployeeExist) {
             employeeRepository.deleteById(employeeEntityID);
-            defaultResponseDTO.setStatus(202);
+            defaultResponseDTO.setStatus(HttpStatus.ACCEPTED.value());
             defaultResponseDTO.setMessage("resource deleted successfully");
         } else {
             throw new ResourceNotFoundException("employee not found");

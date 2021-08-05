@@ -49,7 +49,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/delete/{accountNumber}/{accountType}")
-    public ResponseEntity<DefaultResponseDTO> updateById(@PathVariable(value = "accountNumber") String accountNumber,
+    public ResponseEntity<DefaultResponseDTO> deleteById(@PathVariable(value = "accountNumber") String accountNumber,
                                                 @PathVariable(value = "accountType") String accountType) {
         DefaultResponseDTO response = accountService.deleteById(accountNumber, accountType);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
