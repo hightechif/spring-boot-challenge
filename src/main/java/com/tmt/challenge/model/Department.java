@@ -1,6 +1,9 @@
 package com.tmt.challenge.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.List;
 
 @Entity
 public class Department {
@@ -33,4 +36,5 @@ public class Department {
     public void setName(String name) {
         this.name = name;
     }
+
 }

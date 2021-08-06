@@ -1,6 +1,8 @@
 package com.tmt.challenge.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Employee {
@@ -10,6 +12,10 @@ public class Employee {
     private String email;
     private String name;
     private String phoneNumber;
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "employee")
+    private List<Assignment> assignments = new ArrayList<>();
 
     public Employee() {
     }
@@ -53,6 +59,14 @@ public class Employee {
         this.phoneNumber = phoneNumber;
     }
 
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -60,7 +74,7 @@ public class Employee {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", assignments=" + assignments +
                 '}';
     }
-
 }

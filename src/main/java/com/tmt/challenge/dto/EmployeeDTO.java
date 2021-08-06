@@ -1,5 +1,9 @@
 package com.tmt.challenge.dto;
 
+import com.tmt.challenge.model.Assignment;
+
+import java.util.List;
+
 public class EmployeeDTO {
 
     private Long departmentId;
@@ -7,6 +11,8 @@ public class EmployeeDTO {
     private String email;
     private String name;
     private String phoneNumber;
+
+    private List<AssignmentDTO> assignments;
 
     public Long getDepartmentId() {
         return departmentId;
@@ -48,13 +54,23 @@ public class EmployeeDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    public List<AssignmentDTO> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<AssignmentDTO> assignments) {
+        this.assignments = assignments;
+    }
+
     @Override
     public String toString() {
         return "EmployeeDTO{" +
-                "employeeId=" + employeeId +
+                "departmentId=" + departmentId +
+                ", employeeId=" + employeeId +
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", assignments=" + assignments +
                 '}';
     }
 }

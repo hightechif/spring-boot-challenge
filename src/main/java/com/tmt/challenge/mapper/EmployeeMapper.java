@@ -13,16 +13,19 @@ import java.util.List;
 public interface EmployeeMapper {
 
     @Mappings({
-            @Mapping(target="departmentId", source="employeeId.departmentId"),
-            @Mapping(target="employeeId", source="employeeId.employeeId")
+            @Mapping(target = "departmentId", source = "employeeId.departmentId"),
+            @Mapping(target = "employeeId", source = "employeeId.employeeId")
     })
     EmployeeDTO toEmployeeDTO(Employee employee);
+
     List<EmployeeDTO> toEmployeeDTO(Collection<Employee> employees);
+
     @Mappings({
-            @Mapping(target="employeeId.departmentId", source="departmentId"),
-            @Mapping(target="employeeId.employeeId", source="employeeId")
+            @Mapping(target = "employeeId.departmentId", source = "departmentId"),
+            @Mapping(target = "employeeId.employeeId", source = "employeeId")
     })
     Employee toEmployeeEntity(EmployeeDTO employeeDTO);
+
     List<Employee> toEmployeeEntity(Collection<EmployeeDTO> employeeDTOS);
 
 }
