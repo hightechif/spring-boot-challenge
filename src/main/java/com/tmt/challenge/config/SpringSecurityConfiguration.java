@@ -59,7 +59,7 @@ public class SpringSecurityConfiguration  extends WebSecurityConfigurerAdapter{
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/hello-admin").hasRole("ADMIN")
                 .antMatchers("/hello-user").hasAnyRole("ADMIN","USER")
-                .antMatchers( "/api/auth/signin", "/api/auth/register", "/getResponse", "/api/auth/refresh-token")
+                .antMatchers( "/api/v1/auth/register", "/api/v1/auth/signin", "/api/v1/auth/refresh-token", "/getResponse")
                 .permitAll()  // set endpoint to be public access
                 .anyRequest().authenticated()   // set another request to be endpoint to be public access
                 // to use basic auth

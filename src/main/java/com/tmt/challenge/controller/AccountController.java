@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/account")
+@RequestMapping(value = "/api/v1/accounts")
 public class AccountController {
 
     private final AccountService accountService;
@@ -22,36 +22,36 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<AccountDTO> create(@RequestBody AccountDTO accountDTO) {
-        return ResponseEntity.created(URI.create("/create/" + accountDTO.getAccountNumber())).body(accountService.create(accountDTO));
-    }
-
-    @GetMapping("/get-all")
+    @GetMapping("/")
     public ResponseEntity<List<AccountDTO>> getAll() {
         List<AccountDTO> accountDTOS = accountService.getAll();
         return new ResponseEntity<>(accountDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/get-by-id/{accountNumber}/{accountType}")
-    public ResponseEntity<AccountDTO> getById(@PathVariable(value = "accountNumber") String accountNumber,
+    @GetMapping("/{accountNumber}/{accountType}")
+    public ResponseEntity<AccountDTO> get(@PathVariable(value = "accountNumber") String accountNumber,
                                               @PathVariable(value = "accountType") String accountType) {
-        AccountDTO accountDTO = accountService.getById(accountNumber, accountType);
+        AccountDTO accountDTO = accountService.get(accountNumber, accountType);
         return new ResponseEntity<>(accountDTO, HttpStatus.OK);
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<AccountDTO> create(@RequestBody AccountDTO accountDTO) {
+        return ResponseEntity.created(URI.create("/create/" + accountDTO.getAccountNumber())).body(accountService.create(accountDTO));
+    }
+
     @PutMapping("/edit/{accountNumber}/{accountType}")
-    public ResponseEntity<DefaultResponseDTO> updateById(@PathVariable(value = "accountNumber") String accountNumber,
+    public ResponseEntity<DefaultResponseDTO> update(@PathVariable(value = "accountNumber") String accountNumber,
                                                          @PathVariable(value = "accountType") String accountType,
                                                          @RequestParam(required = false) Double balance) {
-        DefaultResponseDTO response = accountService.updateById(accountNumber, accountType, balance);
+        DefaultResponseDTO response = accountService.update(accountNumber, accountType, balance);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete/{accountNumber}/{accountType}")
-    public ResponseEntity<DefaultResponseDTO> deleteById(@PathVariable(value = "accountNumber") String accountNumber,
+    public ResponseEntity<DefaultResponseDTO> delete(@PathVariable(value = "accountNumber") String accountNumber,
                                                 @PathVariable(value = "accountType") String accountType) {
-        DefaultResponseDTO response = accountService.deleteById(accountNumber, accountType);
+        DefaultResponseDTO response = accountService.delete(accountNumber, accountType);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 

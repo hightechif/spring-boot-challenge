@@ -25,65 +25,65 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @PostMapping("/create-new")
-    public ResponseEntity<DefaultResponseDTO> addNewStudent(@RequestBody StudentRequestDTO studentRequest) {
-        DefaultResponseDTO defaultResponseDTO = studentService.addNewStudent(studentRequest);
-        return new ResponseEntity<>(defaultResponseDTO, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/get-all")
-    public ResponseEntity<List<StudentDTO>> getAllStudents() {
-        List<StudentDTO> studentDTOs = studentService.getAllStudents();
+    @GetMapping("/")
+    public ResponseEntity<List<StudentDTO>> getAll() {
+        List<StudentDTO> studentDTOs = studentService.getAll();
         return new ResponseEntity<>(studentDTOs, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{studentId}")
-    public ResponseEntity<StudentDTO> getStudentById(@PathVariable("studentId") Long studentId) {
-        StudentDTO studentDTO = studentService.getStudentById(studentId);
+    public ResponseEntity<StudentDTO> get(@PathVariable("studentId") Long studentId) {
+        StudentDTO studentDTO = studentService.get(studentId);
         return new ResponseEntity<>(studentDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<StudentDTO> getStudentByEmail(@RequestParam String email) {
-        StudentDTO studentDTO = studentService.getStudentByEmail(email);
+    @PostMapping("/create")
+    public ResponseEntity<DefaultResponseDTO> create(@RequestBody StudentRequestDTO studentRequest) {
+        DefaultResponseDTO defaultResponseDTO = studentService.create(studentRequest);
+        return new ResponseEntity<>(defaultResponseDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get-by-email")
+    public ResponseEntity<StudentDTO> getByEmail(@RequestParam String email) {
+        StudentDTO studentDTO = studentService.getByEmail(email);
         return new ResponseEntity<>(studentDTO, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-card-number")
-    public ResponseEntity<StudentDTO> getStudentByCardNumber(@RequestParam String cardNumber) {
-        StudentDTO responseDTO = studentService.getStudentByCardNumber(cardNumber);
+    public ResponseEntity<StudentDTO> getByCardNumber(@RequestParam String cardNumber) {
+        StudentDTO responseDTO = studentService.getByCardNumber(cardNumber);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-department")
-    public ResponseEntity<List<StudentDTO>> getStudentByDepartment(@RequestParam String department) {
-        List<StudentDTO> responseDTO = studentService.getStudentByDepartment(department);
+    public ResponseEntity<List<StudentDTO>> getByDepartment(@RequestParam String department) {
+        List<StudentDTO> responseDTO = studentService.getByDepartment(department);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @PutMapping("/edit/{studentId}")
-    public ResponseEntity<DefaultResponseDTO> updateStudent(@PathVariable("studentId") Long studentId,
+    public ResponseEntity<DefaultResponseDTO> update(@PathVariable("studentId") Long studentId,
                                                             @RequestParam(required = false) String firstName,
                                                             @RequestParam(required = false) String lastName) {
-        DefaultResponseDTO defaultResponseDTO = studentService.updateStudent(studentId, firstName, lastName);
+        DefaultResponseDTO defaultResponseDTO = studentService.update(studentId, firstName, lastName);
         return new ResponseEntity<>(defaultResponseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{studentId}")
-    public ResponseEntity<DefaultResponseDTO> deleteStudent(@PathVariable("studentId") Long studentId) {
-        DefaultResponseDTO defaultResponseDTO = studentService.deleteStudent(studentId);
+    public ResponseEntity<DefaultResponseDTO> delete(@PathVariable("studentId") Long studentId) {
+        DefaultResponseDTO defaultResponseDTO = studentService.delete(studentId);
         return new ResponseEntity<>(defaultResponseDTO, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-by-book-name")
-    public ResponseEntity<Page<StudentDTO>> getStudentsByBookName(String bookName, Pageable pageable) {
-        Page<StudentDTO> responseDTO = studentService.getStudentsByBookName(bookName, pageable);
+    public ResponseEntity<Page<StudentDTO>> getByBookName(String bookName, Pageable pageable) {
+        Page<StudentDTO> responseDTO = studentService.getByBookName(bookName, pageable);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-course-name")
-    public ResponseEntity<Page<StudentDTO>> getStudentsByCourseName(String courseName, Pageable pageable) {
-        Page<StudentDTO> responseDTO = studentService.getStudentsByCourseName(courseName, pageable);
+    public ResponseEntity<Page<StudentDTO>> getByCourseName(String courseName, Pageable pageable) {
+        Page<StudentDTO> responseDTO = studentService.getByCourseName(courseName, pageable);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 

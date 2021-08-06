@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.http.HttpClient;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,7 +41,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public AccountDTO getById(String accountNumber, String accountType) {
+    public AccountDTO get(String accountNumber, String accountType) {
         Optional<Account> accountOptional = accountRepository.findById(new AccountId(accountNumber, accountType));
         if (accountOptional.isEmpty()) {
             throw new ResourceNotFoundException("account not found");
@@ -51,7 +50,7 @@ public class AccountService {
         return accountMapper.toAccountDTO(account);
     }
 
-    public DefaultResponseDTO updateById(String accountNumber, String accountType, Double balance) {
+    public DefaultResponseDTO update(String accountNumber, String accountType, Double balance) {
         Account account = accountRepository.findById(new AccountId(accountNumber, accountType))
                 .orElseThrow(() -> new ResourceNotFoundException("account not found"));
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
@@ -65,7 +64,7 @@ public class AccountService {
         return defaultResponseDTO;
     }
 
-    public DefaultResponseDTO deleteById(String accountNumber, String accountType) {
+    public DefaultResponseDTO delete(String accountNumber, String accountType) {
         AccountId accountId = new AccountId(accountNumber, accountType);
         boolean isAccountExist = accountRepository.existsById(accountId);
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();

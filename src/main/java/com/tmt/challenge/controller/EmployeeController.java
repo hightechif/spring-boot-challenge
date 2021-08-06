@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -22,38 +22,38 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    @GetMapping("/")
+    public ResponseEntity<List<EmployeeDTO>> getAll() {
+        List<EmployeeDTO> employeeDTOS = employeeService.getAll();
+        return new ResponseEntity<>(employeeDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/{departmentId}/{employeeId}")
+    public ResponseEntity<EmployeeDTO> get(@PathVariable(value = "departmentId") Long departmentId,
+                                               @PathVariable(value = "employeeId") Long employeeId) {
+        EmployeeDTO employeeDTO = employeeService.get(departmentId, employeeId);
+        return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<EmployeeDTO> create(@RequestBody EmployeeDTO employeeDTO) {
         EmployeeDTO responseData = employeeService.create(employeeDTO);
         return ResponseEntity.created(URI.create("/create/")).body(responseData);
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<List<EmployeeDTO>> getAll() {
-        List<EmployeeDTO> employeeDTOS = employeeService.getAll();
-        return new ResponseEntity<>(employeeDTOS, HttpStatus.OK);
-    }
-
-    @GetMapping("/get-by-id/{departmentId}/{employeeId}")
-    public ResponseEntity<EmployeeDTO> getById(@PathVariable(value = "departmentId") Long departmentId,
-                                               @PathVariable(value = "employeeId") Long employeeId) {
-        EmployeeDTO employeeDTO = employeeService.getById(departmentId, employeeId);
-        return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
-    }
-
     @PutMapping("/edit/{departmentId}/{employeeId}")
-    public ResponseEntity<DefaultResponseDTO> updateById(@PathVariable(value = "departmentId") Long departmentId,
+    public ResponseEntity<DefaultResponseDTO> update(@PathVariable(value = "departmentId") Long departmentId,
                                                          @PathVariable(value = "employeeId") Long employeeId,
                                                          @RequestParam(required = false) String name,
                                                          @RequestParam(required = false) String phoneNumber){
-        DefaultResponseDTO response = employeeService.updateById(departmentId, employeeId, name, phoneNumber);
+        DefaultResponseDTO response = employeeService.update(departmentId, employeeId, name, phoneNumber);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete/{departmentId}/{employeeId}")
-    public ResponseEntity<DefaultResponseDTO> deleteById(@PathVariable(value = "departmentId") Long departmentId,
+    public ResponseEntity<DefaultResponseDTO> delete(@PathVariable(value = "departmentId") Long departmentId,
                                                          @PathVariable(value = "employeeId") Long employeeId) {
-        DefaultResponseDTO response = employeeService.deleteById(departmentId, employeeId);
+        DefaultResponseDTO response = employeeService.delete(departmentId, employeeId);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 

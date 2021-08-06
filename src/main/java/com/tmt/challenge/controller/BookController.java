@@ -2,7 +2,6 @@ package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.dto.BookWithStudentDTO;
-import com.tmt.challenge.dto.StudentDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.service.BookService;
@@ -56,7 +55,7 @@ public class BookController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/book/{bookId}")
+    @GetMapping("/books/{bookId}")
     public ResponseEntity<BookWithStudentDTO> getBookById(@PathVariable(value = "bookId") Long bookId) {
         BookWithStudentDTO response = bookService.getBookById(bookId);
         return ResponseEntity.ok(response);
@@ -64,10 +63,10 @@ public class BookController {
 
     /**
      * {@code GET /books/search} : search all books from related keyword
-     * @param keyword the keyword for filter bookName, firstName, lastName, and/or email
-     * @param pageable the pagination information
      *
-     * */
+     * @param keyword  the keyword for filter bookName, firstName, lastName, and/or email
+     * @param pageable the pagination information
+     */
     @GetMapping("/books/search")
     public ResponseEntity<Page<BookWithStudentDTO>> search(@RequestParam Optional<String> keyword, Pageable pageable) {
         Page<BookWithStudentDTO> response = bookService.search(keyword.orElse(""), pageable);

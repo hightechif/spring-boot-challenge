@@ -62,7 +62,7 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public EmployeeDTO getById(Long departmentId, Long employeeId) {
+    public EmployeeDTO get(Long departmentId, Long employeeId) {
         Optional<Employee> employeeOptional = employeeRepository.findById(new EmployeeId(departmentId, employeeId));
         if (employeeOptional.isEmpty()) {
             throw new ResourceNotFoundException("employee not found");
@@ -71,7 +71,7 @@ public class EmployeeService {
         return employeeMapper.toEmployeeDTO(employee);
     }
 
-    public DefaultResponseDTO updateById(Long departmentId, Long employeeId, String name, String phoneNumber) {
+    public DefaultResponseDTO update(Long departmentId, Long employeeId, String name, String phoneNumber) {
         Employee employee = employeeRepository.findById(new EmployeeId(departmentId, employeeId))
                 .orElseThrow(() -> new ResourceNotFoundException("employee not found"));
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
@@ -89,7 +89,7 @@ public class EmployeeService {
         return defaultResponseDTO;
     }
 
-    public DefaultResponseDTO deleteById(Long departmentId, Long employeeId) {
+    public DefaultResponseDTO delete(Long departmentId, Long employeeId) {
         EmployeeId employeeEntityID = new EmployeeId(departmentId, employeeId);
         boolean isEmployeeExist = employeeRepository.existsById(employeeEntityID);
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();

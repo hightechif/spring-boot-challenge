@@ -9,6 +9,9 @@ import com.tmt.challenge.dto.StudentIdCardDTO;
 import com.tmt.challenge.dto.request.StudentRequestDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
+import com.tmt.challenge.mapper.BookMapper;
+import com.tmt.challenge.mapper.CourseMapper;
+import com.tmt.challenge.mapper.StudentIdCardMapper;
 import com.tmt.challenge.mapper.StudentMapper;
 import com.tmt.challenge.model.Book;
 import com.tmt.challenge.model.Course;
@@ -26,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,11 +36,17 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final BookMapper bookMapper;
+    private final StudentIdCardMapper studentIdCardMapper;
+    private final CourseMapper courseMapper;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, BookMapper bookMapper, StudentIdCardMapper studentIdCardMapper, CourseMapper courseMapper) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
+        this.bookMapper = bookMapper;
+        this.studentIdCardMapper = studentIdCardMapper;
+        this.courseMapper = courseMapper;
     }
 
     // Student Specs private method
@@ -52,7 +60,7 @@ public class StudentService {
     }
 
     // CREATE New Student
-    public DefaultResponseDTO addNewStudent(StudentRequestDTO studentRequest) {
+    public DefaultResponseDTO create(StudentRequestDTO studentRequest) {
         // Check Student with existing email
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(studentRequest.getEmail());
         if (studentOptional.isPresent()) {
@@ -61,29 +69,21 @@ public class StudentService {
         // Extract Student from request body
         Student student = studentRequest.getStudent();
         // Extract Collection of Book from request body and set student to it
-        List<BookDTO> booksDTO = studentRequest.getBooks();
-        List<Book> books = booksDTO.stream().map(x -> {
-            Book book = new Book();
-            book.setId(x.getId());
-            book.setBookName(x.getBookName());
-            book.setStudent(student);
-            return book;
-        }).collect(Collectors.toList());
+        List<BookDTO> booksDTOS = studentRequest.getBooks();
+        List<Book> books = bookMapper.toBookEntity(booksDTOS);
+        books.forEach(x -> {
+            x.setStudent(student);
+        });
         // Extract StudentIdCard from request body
         StudentIdCardDTO studentIdCardDTO = studentRequest.getStudentIdCard();
-        StudentIdCard studentIdCard = new StudentIdCard();
-        studentIdCard.setCardNumber(studentIdCardDTO.getCardNumber());
+        StudentIdCard studentIdCard = studentIdCardMapper.toIdCardEntity(studentIdCardDTO);
         studentIdCard.setStudent(student);
         // Extract Collection of course from request body and set student of it
-        List<CourseDTO> coursesDTO = studentRequest.getCourses();
-        List<Course> courses = coursesDTO.stream().map(x -> {
-            Course course = new Course();
-            course.setId(x.getId());
-            course.setName(x.getName());
-            course.setDepartment(x.getDepartment());
-            course.setStudents(List.of(student));
-            return course;
-        }).collect(Collectors.toList());
+        List<CourseDTO> coursesDTOS = studentRequest.getCourses();
+        List<Course> courses = courseMapper.toCourseEntity(coursesDTOS);
+        courses.forEach(x -> {
+            x.setStudents(List.of(student));
+        });
         // Set all extracted data into student object and save it
         student.setBooks(books);
         student.setStudentIdCard(studentIdCard);
@@ -94,14 +94,14 @@ public class StudentService {
 
     // READ All Students
     @Transactional(readOnly = true)
-    public List<StudentDTO> getAllStudents() {
+    public List<StudentDTO> getAll() {
         List<Student> students = studentRepository.findAll();
         return studentMapper.toStudentDTO(students);
     }
 
     // READ Student by ID
     @Transactional(readOnly = true)
-    public StudentDTO getStudentById(Long studentId) {
+    public StudentDTO get(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
         return studentMapper.toStudentDTO(student);
@@ -109,14 +109,14 @@ public class StudentService {
 
     // READ Student by Email
     @Transactional(readOnly = true)
-    public StudentDTO getStudentByEmail(String email) {
+    public StudentDTO getByEmail(String email) {
         Student student = studentRepository.findStudentByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("student with email " + email + " not found"));
         return studentMapper.toStudentDTO(student);
     }
 
     // UPDATE Student
-    public DefaultResponseDTO updateStudent(Long studentId, String firstName, String lastName) {
+    public DefaultResponseDTO update(Long studentId, String firstName, String lastName) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
@@ -134,7 +134,7 @@ public class StudentService {
     }
 
     // DELETE Student
-    public DefaultResponseDTO deleteStudent(Long studentId) {
+    public DefaultResponseDTO delete(Long studentId) {
         boolean isStudentExist = studentRepository.existsById(studentId);
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         if (isStudentExist) {
@@ -149,7 +149,7 @@ public class StudentService {
 
     // READ Student by Card Number
     @Transactional(readOnly = true)
-    public StudentDTO getStudentByCardNumber(String cardNumber) {
+    public StudentDTO getByCardNumber(String cardNumber) {
         Student student = studentRepository.findStudentByStudentIdCardCardNumber(cardNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("student ID with cardNumber " + cardNumber + " not found"));
         return studentMapper.toStudentDTO(student);
@@ -157,21 +157,21 @@ public class StudentService {
 
     // READ Student by Department
     @Transactional(readOnly = true)
-    public List<StudentDTO> getStudentByDepartment(String department) {
+    public List<StudentDTO> getByDepartment(String department) {
         List<Student> studentList = studentRepository.findStudentByCoursesDepartment(department);
         return studentMapper.toStudentDTO(studentList);
     }
 
     // READ Students by Book Name
     @Transactional(readOnly = true)
-    public Page<StudentDTO> getStudentsByBookName(String bookName, Pageable pageable) {
+    public Page<StudentDTO> getByBookName(String bookName, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findStudentsByBookName(bookName, pageable);
         return studentPage.map(studentMapper::toStudentDTO);
     }
 
     // READ Students by Course Name
     @Transactional(readOnly = true)
-    public Page<StudentDTO> getStudentsByCourseName(String courseName, Pageable pageable) {
+    public Page<StudentDTO> getByCourseName(String courseName, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findStudentsByCourseName(courseName, pageable);
         return studentPage.map(studentMapper::toStudentDTO);
     }
