@@ -1,9 +1,12 @@
 package com.tmt.challenge.service;
 
+import com.tmt.challenge.dto.AssignmentDTO;
 import com.tmt.challenge.dto.EmployeeDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
+import com.tmt.challenge.mapper.AssignmentMapper;
 import com.tmt.challenge.mapper.EmployeeMapper;
+import com.tmt.challenge.model.Assignment;
 import com.tmt.challenge.model.Employee;
 import com.tmt.challenge.model.EmployeeId;
 import com.tmt.challenge.repository.EmployeeRepository;
@@ -22,16 +25,34 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private final AssignmentMapper assignmentMapper;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, AssignmentMapper assignmentMapper) {
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
+        this.assignmentMapper = assignmentMapper;
     }
 
+    // CREATE New Employee
     public EmployeeDTO create(EmployeeDTO employeeDTO) {
-        Employee employee = employeeRepository.save(employeeMapper.toEmployeeEntity((employeeDTO)));
-        return employeeMapper.toEmployeeDTO(employee);
+        Optional<Employee> employeeWithEmail = employeeRepository.findEmployeeByEmail(employeeDTO.getEmail());
+        if (employeeWithEmail.isPresent()) {
+            throw new IllegalStateException("email already exist");
+        }
+        Optional<Employee> employeeWithPhone = employeeRepository.findEmployeeByPhoneNumber(employeeDTO.getPhoneNumber());
+        if (employeeWithPhone.isPresent()) {
+            throw new IllegalStateException("phone already exist");
+        }
+        Employee employee = employeeMapper.toEmployeeEntity((employeeDTO));
+        List<AssignmentDTO> assignmentDTOS = employeeDTO.getAssignments();
+        List<Assignment> assignments = assignmentMapper.toAssignmentEntity(assignmentDTOS);
+        assignments.forEach(x -> {
+            x.setEmployee(employee);
+        });
+        employee.setAssignments(assignments);
+        Employee savedData = employeeRepository.save(employee);
+        return employeeMapper.toEmployeeDTO(savedData);
     }
 
     @Transactional(readOnly = true)

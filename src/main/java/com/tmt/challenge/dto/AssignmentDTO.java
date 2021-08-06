@@ -1,5 +1,9 @@
 package com.tmt.challenge.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 public class AssignmentDTO {
@@ -7,7 +11,11 @@ public class AssignmentDTO {
     private Long id;
     private String title;
     private String description;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     public Long getId() {

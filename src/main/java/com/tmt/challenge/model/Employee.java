@@ -9,8 +9,10 @@ public class Employee {
 
     @EmbeddedId
     private EmployeeId employeeId;
+    @Column(unique = true)
     private String email;
     private String name;
+    @Column(unique = true)
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,

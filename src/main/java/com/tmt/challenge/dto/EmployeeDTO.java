@@ -1,7 +1,5 @@
 package com.tmt.challenge.dto;
 
-import com.tmt.challenge.model.Assignment;
-
 import java.util.List;
 
 public class EmployeeDTO {
