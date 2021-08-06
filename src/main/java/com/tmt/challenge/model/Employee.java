@@ -1,7 +1,6 @@
 package com.tmt.challenge.model;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
 public class Employee {

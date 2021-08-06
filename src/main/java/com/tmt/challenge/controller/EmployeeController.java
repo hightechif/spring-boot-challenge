@@ -24,7 +24,8 @@ public class EmployeeController {
 
     @PostMapping("/create")
     public ResponseEntity<EmployeeDTO> create(@RequestBody EmployeeDTO employeeDTO) {
-        return ResponseEntity.created(URI.create("/create/")).body(employeeService.create(employeeDTO));
+        EmployeeDTO responseData = employeeService.create(employeeDTO);
+        return ResponseEntity.created(URI.create("/create/")).body(responseData);
     }
 
     @GetMapping("/get-all")
