@@ -7,7 +7,7 @@ public class Department {
 
     @Id
     private Long id;
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String name;
 
     public Department() {
