@@ -1,8 +1,11 @@
 package com.tmt.challenge.service;
 
+import com.tmt.challenge.constant.enums.Operator;
+import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.dto.AssignmentDTO;
 import com.tmt.challenge.dto.EmployeeDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
+import com.tmt.challenge.dto.response.SearchAssignmentDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.mapper.AssignmentMapper;
 import com.tmt.challenge.mapper.EmployeeMapper;
@@ -12,11 +15,16 @@ import com.tmt.challenge.model.Employee;
 import com.tmt.challenge.model.EmployeeId;
 import com.tmt.challenge.repository.DepartmentRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
+import com.tmt.challenge.repository.specs.EmployeeSpecification;
+import com.tmt.challenge.repository.specs.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +46,23 @@ public class EmployeeService {
         this.assignmentMapper = assignmentMapper;
     }
 
+    // Employee Specs private method
+    private EmployeeSpecification employeeSpecification(String keyword, Date date) {
+        EmployeeSpecification employeeSpecification = new EmployeeSpecification();
+        if (!keyword.equals("") && (date != null)) {
+            employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
+            employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
+            employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
+        } else if (!keyword.equals("") && (date == null)) {
+            employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
+        } else if (keyword.equals("") && (date != null)){
+            employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
+            employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
+        }
+        employeeSpecification.operator(Operator.AND);
+        return employeeSpecification;
+    }
+
     // CREATE New Employee
     public EmployeeDTO create(EmployeeDTO employeeDTO) {
         Optional<Department> employeeDepartment = departmentRepository.findById(employeeDTO.getDepartmentId());
@@ -52,12 +77,17 @@ public class EmployeeService {
         if (employeeWithPhone.isPresent()) {
             throw new IllegalStateException("phone already exist");
         }
+        employeeDTO.getAssignments().forEach(x -> {
+            Date startDate = x.getStartDate();
+            Date endDate = x.getEndDate();
+            if (startDate.compareTo(endDate) > 0) {
+                throw new IllegalStateException("startDate greater than endDate");
+            }
+        });
         Employee employee = employeeMapper.toEmployeeEntity((employeeDTO));
         List<AssignmentDTO> assignmentDTOS = employeeDTO.getAssignments();
         List<Assignment> assignments = assignmentMapper.toAssignmentEntity(assignmentDTOS);
-        assignments.forEach(x -> {
-            x.setEmployee(employee);
-        });
+        assignments.forEach(x -> x.setEmployee(employee));
         employee.setAssignments(assignments);
         Employee savedData = employeeRepository.save(employee);
         return employeeMapper.toEmployeeDTO(savedData);
@@ -115,5 +145,10 @@ public class EmployeeService {
             throw new ResourceNotFoundException("employee not found");
         }
         return defaultResponseDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SearchAssignmentDTO> search(String keyword, Date date, Pageable pageable) {
+        return employeeRepository.findAll(employeeSpecification(keyword, date), pageable).map(employeeMapper::toSearchDTO);
     }
 }

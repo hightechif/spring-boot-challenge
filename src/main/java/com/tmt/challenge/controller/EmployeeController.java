@@ -1,14 +1,19 @@
 package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.EmployeeDTO;
+import com.tmt.challenge.dto.request.SearchRequestDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
+import com.tmt.challenge.dto.response.SearchAssignmentDTO;
 import com.tmt.challenge.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -55,6 +60,23 @@ public class EmployeeController {
                                                          @PathVariable(value = "employeeId") Long employeeId) {
         DefaultResponseDTO response = employeeService.delete(departmentId, employeeId);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
+    /**
+     * {@code GET /employees/search} : search all employees from related keyword
+     *
+     * @param request  the request DTO consist of keyword and date for filter title of employee assignment
+     * @param pageable the pagination information
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<SearchAssignmentDTO>> search(@RequestBody SearchRequestDTO request,
+                                                    Pageable pageable) {
+        String keyword = request.getKeyword().orElse("");
+        Date date = request.getDate().orElse(null);
+        System.out.println("keyword: " + keyword);
+        System.out.println("date: " + date);
+        Page<SearchAssignmentDTO> response = employeeService.search(keyword, date, pageable);
+        return ResponseEntity.ok().body(response);
     }
 
 }
