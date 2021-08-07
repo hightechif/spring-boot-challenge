@@ -7,7 +7,7 @@ pm.test("Positive Case", function () {
 
 // Add more data 2
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -62,7 +62,7 @@ pm.sendRequest({
 
 // Add more data 3
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -110,7 +110,7 @@ pm.sendRequest({
 
 // Add more data 4
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -162,7 +162,7 @@ pm.sendRequest({
 
 // Add more data 5
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -217,7 +217,7 @@ pm.sendRequest({
 
 // Add more data 6
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -265,7 +265,7 @@ pm.sendRequest({
 
 // Add more data 7
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -313,7 +313,7 @@ pm.sendRequest({
 
 // Add more data 8
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -364,7 +364,7 @@ pm.sendRequest({
 
 // Add more data 9
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
@@ -411,7 +411,7 @@ pm.sendRequest({
 
 // Add more data 10
 pm.sendRequest({
-    url:"localhost:8080/api/v1/students/create-new",
+    url:"localhost:8080/api/v1/students/create",
     method: 'POST',
     header: {
         'content-type': 'application/json',
