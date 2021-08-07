@@ -9,7 +9,7 @@ public class Employee {
 
     @EmbeddedId
     private EmployeeId employeeId;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     private String name;
     @Column(unique = true)

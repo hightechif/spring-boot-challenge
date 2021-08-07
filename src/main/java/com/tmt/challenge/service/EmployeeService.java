@@ -7,8 +7,10 @@ import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.mapper.AssignmentMapper;
 import com.tmt.challenge.mapper.EmployeeMapper;
 import com.tmt.challenge.model.Assignment;
+import com.tmt.challenge.model.Department;
 import com.tmt.challenge.model.Employee;
 import com.tmt.challenge.model.EmployeeId;
+import com.tmt.challenge.repository.DepartmentRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,18 +26,24 @@ import java.util.Optional;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final DepartmentRepository departmentRepository;
     private final EmployeeMapper employeeMapper;
     private final AssignmentMapper assignmentMapper;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, AssignmentMapper assignmentMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, AssignmentMapper assignmentMapper) {
         this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
         this.employeeMapper = employeeMapper;
         this.assignmentMapper = assignmentMapper;
     }
 
     // CREATE New Employee
     public EmployeeDTO create(EmployeeDTO employeeDTO) {
+        Optional<Department> employeeDepartment = departmentRepository.findById(employeeDTO.getDepartmentId());
+        if (employeeDepartment.isEmpty()) {
+            throw new IllegalStateException("department id didn't exist");
+        }
         Optional<Employee> employeeWithEmail = employeeRepository.findEmployeeByEmail(employeeDTO.getEmail());
         if (employeeWithEmail.isPresent()) {
             throw new IllegalStateException("email already exist");
@@ -63,7 +71,9 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public EmployeeDTO get(Long departmentId, Long employeeId) {
-        Optional<Employee> employeeOptional = employeeRepository.findById(new EmployeeId(departmentId, employeeId));
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
+        Optional<Employee> employeeOptional = employeeRepository.findById(new EmployeeId(department, employeeId));
         if (employeeOptional.isEmpty()) {
             throw new ResourceNotFoundException("employee not found");
         }
@@ -72,7 +82,9 @@ public class EmployeeService {
     }
 
     public DefaultResponseDTO update(Long departmentId, Long employeeId, String name, String phoneNumber) {
-        Employee employee = employeeRepository.findById(new EmployeeId(departmentId, employeeId))
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
+        Employee employee = employeeRepository.findById(new EmployeeId(department, employeeId))
                 .orElseThrow(() -> new ResourceNotFoundException("employee not found"));
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         String message = "request success. but, nothing changed";
@@ -90,7 +102,9 @@ public class EmployeeService {
     }
 
     public DefaultResponseDTO delete(Long departmentId, Long employeeId) {
-        EmployeeId employeeEntityID = new EmployeeId(departmentId, employeeId);
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
+        EmployeeId employeeEntityID = new EmployeeId(department, employeeId);
         boolean isEmployeeExist = employeeRepository.existsById(employeeEntityID);
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         if (isEmployeeExist) {

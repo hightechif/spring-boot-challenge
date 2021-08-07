@@ -1,7 +1,5 @@
 package com.tmt.challenge.dto;
 
-import java.util.List;
-
 public class DepartmentDTO {
 
     private Long id;

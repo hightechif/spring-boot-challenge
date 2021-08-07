@@ -3,8 +3,6 @@ package com.tmt.challenge.mapper;
 import com.tmt.challenge.dto.DepartmentDTO;
 import com.tmt.challenge.model.Department;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import java.util.Collection;
 import java.util.List;
