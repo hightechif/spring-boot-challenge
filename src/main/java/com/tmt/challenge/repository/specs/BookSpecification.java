@@ -3,7 +3,6 @@ package com.tmt.challenge.repository.specs;
 import com.tmt.challenge.constant.enums.Operator;
 import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.model.Book;
-import com.tmt.challenge.model.Student;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -38,16 +37,16 @@ public class BookSpecification implements Specification<Book> {
             if (criteria.getOperation().equals(SearchOperation.DATE_GREATER_THAN_EQUAL)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
                     Join<Object, Object> join = root.join(criteria.getJoinColumnName());
-                    predicates.add(builder.greaterThanOrEqualTo(join.<Date>get(criteria.getKey()), (Date)criteria.getValue()));
+                    predicates.add(builder.greaterThanOrEqualTo(join.<Date>get(criteria.getKey()), (Date) criteria.getValue()));
                 } else {
-                    predicates.add(builder.greaterThanOrEqualTo(root.<Date>get(criteria.getKey()), (Date)criteria.getValue()));
+                    predicates.add(builder.greaterThanOrEqualTo(root.<Date>get(criteria.getKey()), (Date) criteria.getValue()));
                 }
             } else if (criteria.getOperation().equals(SearchOperation.DATE_LESS_THAN_EQUAL)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
                     Join<Object, Object> join = root.join(criteria.getJoinColumnName());
-                    predicates.add(builder.lessThanOrEqualTo(join.<Date>get(criteria.getKey()), (Date)criteria.getValue()));
+                    predicates.add(builder.lessThanOrEqualTo(join.<Date>get(criteria.getKey()), (Date) criteria.getValue()));
                 } else {
-                    predicates.add(builder.lessThanOrEqualTo(root.<Date>get(criteria.getKey()), (Date)criteria.getValue()));
+                    predicates.add(builder.lessThanOrEqualTo(root.<Date>get(criteria.getKey()), (Date) criteria.getValue()));
                 }
             } else if (criteria.getOperation().equals(SearchOperation.EQUAL)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
@@ -80,9 +79,9 @@ public class BookSpecification implements Specification<Book> {
             } else if (criteria.getOperation().equals(SearchOperation.DATE_BETWEEN)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
                     Join<Object, Object> join = root.join(criteria.getJoinColumnName());
-                    predicates.add(builder.between(join.<Date>get(criteria.getKey()), (Date)criteria.getStartDate(), (Date)criteria.getEndDate()));
+                    predicates.add(builder.between(join.<Date>get(criteria.getKey()), (Date) criteria.getStartDate(), (Date) criteria.getEndDate()));
                 } else {
-                    predicates.add(builder.between(root.<Date>get(criteria.getKey()), (Date)criteria.getStartDate(), (Date)criteria.getEndDate()));
+                    predicates.add(builder.between(root.<Date>get(criteria.getKey()), (Date) criteria.getStartDate(), (Date) criteria.getEndDate()));
                 }
             } else if (criteria.getOperation().equals(SearchOperation.IN)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
@@ -101,30 +100,30 @@ public class BookSpecification implements Specification<Book> {
             } else if (criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
                     Join<Object, Object> join = root.join(criteria.getJoinColumnName());
-                    predicates.add(builder.greaterThan(join.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.greaterThan(join.get(criteria.getKey()), (String) criteria.getValue()));
                 } else {
-                    predicates.add(builder.greaterThan(root.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.greaterThan(root.get(criteria.getKey()), (String) criteria.getValue()));
                 }
             } else if (criteria.getOperation().equals(SearchOperation.GREATER_THAN_EQUAL)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
                     Join<Object, Object> join = root.join(criteria.getJoinColumnName());
-                    predicates.add(builder.greaterThanOrEqualTo(join.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.greaterThanOrEqualTo(join.get(criteria.getKey()), (String) criteria.getValue()));
                 } else {
-                    predicates.add(builder.greaterThanOrEqualTo(root.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.greaterThanOrEqualTo(root.get(criteria.getKey()), (String) criteria.getValue()));
                 }
             } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
                     Join<Object, Object> join = root.join(criteria.getJoinColumnName());
-                    predicates.add(builder.lessThan(join.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.lessThan(join.get(criteria.getKey()), (String) criteria.getValue()));
                 } else {
-                    predicates.add(builder.lessThan(root.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.lessThan(root.get(criteria.getKey()), (String) criteria.getValue()));
                 }
             } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN_EQUAL)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {
                     Join<Object, Object> join = root.join(criteria.getJoinColumnName());
-                    predicates.add(builder.lessThanOrEqualTo(join.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.lessThanOrEqualTo(join.get(criteria.getKey()), (String) criteria.getValue()));
                 } else {
-                    predicates.add(builder.lessThanOrEqualTo(root.get(criteria.getKey()), (String)criteria.getValue()));
+                    predicates.add(builder.lessThanOrEqualTo(root.get(criteria.getKey()), (String) criteria.getValue()));
                 }
             } else if (criteria.getOperation().equals(SearchOperation.NOT_EQUAL)) {
                 if (criteria.getJoinColumnName() != null && !criteria.getJoinColumnName().isEmpty()) {

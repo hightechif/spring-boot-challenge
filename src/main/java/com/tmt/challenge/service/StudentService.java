@@ -71,9 +71,7 @@ public class StudentService {
         // Extract Collection of Book from request body and set student to it
         List<BookDTO> booksDTOS = studentRequest.getBooks();
         List<Book> books = bookMapper.toBookEntity(booksDTOS);
-        books.forEach(x -> {
-            x.setStudent(student);
-        });
+        books.forEach(x -> x.setStudent(student));
         // Extract StudentIdCard from request body
         StudentIdCardDTO studentIdCardDTO = studentRequest.getStudentIdCard();
         StudentIdCard studentIdCard = studentIdCardMapper.toIdCardEntity(studentIdCardDTO);
@@ -81,9 +79,7 @@ public class StudentService {
         // Extract Collection of course from request body and set student of it
         List<CourseDTO> coursesDTOS = studentRequest.getCourses();
         List<Course> courses = courseMapper.toCourseEntity(coursesDTOS);
-        courses.forEach(x -> {
-            x.setStudents(List.of(student));
-        });
+        courses.forEach(x -> x.setStudents(List.of(student)));
         // Set all extracted data into student object and save it
         student.setBooks(books);
         student.setStudentIdCard(studentIdCard);

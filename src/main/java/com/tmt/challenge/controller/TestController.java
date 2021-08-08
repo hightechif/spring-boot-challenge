@@ -67,10 +67,10 @@ public class TestController {
 
                 // if the authentication is successful
                 if (authenticationResponse.getStatusCode().equals(HttpStatus.OK)) {
-                    String token = "Bearer " + authenticationResponse.getBody().getToken();
+                    String token = "Bearer " + Objects.requireNonNull(authenticationResponse.getBody()).getToken();
                     HttpHeaders headers = getHeaders();
                     headers.set("Authorization", token);
-                    HttpEntity<String> jwtEntity = new HttpEntity<String>(headers);
+                    HttpEntity<String> jwtEntity = new HttpEntity<>(headers);
                     // Use Token to get Response
                     ResponseEntity<String> helloResponse = restTemplate.exchange(HELLO_URL, HttpMethod.GET, jwtEntity,
                             String.class);
@@ -87,7 +87,7 @@ public class TestController {
                 // try again with refresh token
                 response = getData();
             } else {
-                System.out.println(ex);
+                throw ex;
             }
         }
         return response;

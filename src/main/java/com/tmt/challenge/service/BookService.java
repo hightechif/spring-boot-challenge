@@ -4,27 +4,21 @@ import com.tmt.challenge.constant.enums.Operator;
 import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.dto.BookDTO;
 import com.tmt.challenge.dto.BookWithStudentDTO;
-import com.tmt.challenge.dto.StudentOnlyDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.mapper.BookMapper;
-import com.tmt.challenge.mapper.StudentMapper;
 import com.tmt.challenge.model.Book;
-import com.tmt.challenge.model.Student;
 import com.tmt.challenge.repository.BookRepository;
 import com.tmt.challenge.repository.StudentRepository;
 import com.tmt.challenge.repository.specs.BookSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,14 +27,12 @@ public class BookService {
     private final BookRepository bookRepository;
     private final StudentRepository studentRepository;
     private final BookMapper bookMapper;
-    private final StudentMapper studentMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, StudentRepository studentRepository, BookMapper bookMapper, StudentMapper studentMapper) {
+    public BookService(BookRepository bookRepository, StudentRepository studentRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
         this.studentRepository = studentRepository;
         this.bookMapper = bookMapper;
-        this.studentMapper = studentMapper;
     }
 
     // Book Specs private method
@@ -97,14 +89,13 @@ public class BookService {
             throw new ResourceNotFoundException("Book with id " + bookId + " not found");
         }
         Book book = bookOptional.get();
-        BookWithStudentDTO bookOutput = bookMapper.toBookWithStudentDTO(book);
-        return bookOutput;
+        return bookMapper.toBookWithStudentDTO(book);
     }
 
     // SEARCH Book
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> search(String keyword, Pageable pageable) {
-        Page<BookWithStudentDTO> bookResult = bookRepository.findAll(bookSpecification(keyword), pageable).map(bookMapper::toBookWithStudentDTO);
-        return bookResult;
+        Page<Book> books = bookRepository.findAll(bookSpecification(keyword), pageable);
+        return books.map(bookMapper::toBookWithStudentDTO);
     }
 }
