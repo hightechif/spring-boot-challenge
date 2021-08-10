@@ -50,12 +50,15 @@ public class EmployeeService {
     private EmployeeSpecification employeeSpecification(String keyword, Date date) {
         EmployeeSpecification employeeSpecification = new EmployeeSpecification();
         if (!keyword.equals("") && (date != null)) {
+            System.out.println("Query 1");
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
         } else if (!keyword.equals("") && (date == null)) {
+            System.out.println("Query 2");
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
         } else if (keyword.equals("") && (date != null)){
+            System.out.println("Query 3");
             employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
         }

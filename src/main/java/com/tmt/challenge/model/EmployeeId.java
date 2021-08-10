@@ -15,6 +15,7 @@ public class EmployeeId implements Serializable {
             nullable = false)
     @JsonIgnore
     private Department department;
+    @Column(name = "employee_id")
     private Long employeeId;
 
     public EmployeeId() {

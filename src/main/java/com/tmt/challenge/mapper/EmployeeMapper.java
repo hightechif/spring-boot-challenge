@@ -15,6 +15,7 @@ public interface EmployeeMapper {
 
     @Mappings({
             @Mapping(target = "departmentId", source = "employeeId.department.id"),
+            @Mapping(target = "departmentName", source = "employeeId.department.name"),
             @Mapping(target = "employeeId", source = "employeeId.employeeId")
     })
     EmployeeDTO toEmployeeDTO(Employee employee);
@@ -32,6 +33,7 @@ public interface EmployeeMapper {
 
     @Mappings({
             @Mapping(target = "employeeId.department.id", source = "departmentId"),
+            @Mapping(target = "employeeId.department.name", source = "departmentName"),
             @Mapping(target = "employeeId.employeeId", source = "employeeId")
     })
     Employee toEmployeeEntity(EmployeeDTO employeeDTO);

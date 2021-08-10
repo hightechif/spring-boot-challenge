@@ -25,8 +25,14 @@ public class Assignment {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "department_id", nullable = false)
-    @JoinColumn(name = "employee_id", nullable = false)
+    @JoinColumns({
+            @JoinColumn(
+                    name = "department_id",
+                    referencedColumnName = "department_id"),
+            @JoinColumn(
+                    name = "employee_id",
+                    referencedColumnName = "employee_id")
+    })
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Employee employee;

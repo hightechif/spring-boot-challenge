@@ -5,6 +5,7 @@ import java.util.List;
 public class EmployeeDTO {
 
     private Long departmentId;
+    private String departmentName;
     private Long employeeId;
     private String email;
     private String name;
@@ -18,6 +19,14 @@ public class EmployeeDTO {
 
     public void setDepartmentId(Long departmentId) {
         this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public Long getEmployeeId() {
