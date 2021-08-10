@@ -4,7 +4,7 @@ import com.tmt.challenge.dto.AssignmentDTO;
 
 import java.util.List;
 
-public class SearchAssignmentDTO {
+public class SearchResponseDTO {
 
     private Long departmentId;
     private String departmentName;

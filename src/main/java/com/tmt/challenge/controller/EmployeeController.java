@@ -1,9 +1,10 @@
 package com.tmt.challenge.controller;
 
 import com.tmt.challenge.dto.EmployeeDTO;
+import com.tmt.challenge.dto.request.SearchBetweenDTO;
 import com.tmt.challenge.dto.request.SearchRequestDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
-import com.tmt.challenge.dto.response.SearchAssignmentDTO;
+import com.tmt.challenge.dto.response.SearchResponseDTO;
 import com.tmt.challenge.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -69,13 +70,22 @@ public class EmployeeController {
      * @param pageable the pagination information
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<SearchAssignmentDTO>> search(@RequestBody SearchRequestDTO request,
-                                                    Pageable pageable) {
+    public ResponseEntity<Page<SearchResponseDTO>> search(@RequestBody SearchRequestDTO request,
+                                                          Pageable pageable) {
         String keyword = request.getKeyword().orElse("");
         Date date = request.getDate().orElse(null);
-        System.out.println("keyword: " + keyword);
-        System.out.println("date: " + date);
-        Page<SearchAssignmentDTO> response = employeeService.search(keyword, date, pageable);
+        Page<SearchResponseDTO> response = employeeService.search(keyword, date, pageable);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/search-between")
+    public ResponseEntity<Page<SearchResponseDTO>> searchBetween(@RequestBody SearchBetweenDTO request,
+                                                                 Pageable pageable) {
+        String keyword = request.getKeyword().orElse("");
+        Date startDate = request.getStartDate().orElse(null);
+        Date endDate = request.getEndDate().orElse(null);
+        System.out.println("MASUK CONTROLLER");
+        Page<SearchResponseDTO> response = employeeService.searchBetween(keyword, startDate, endDate, pageable);
         return ResponseEntity.ok().body(response);
     }
 

@@ -1,7 +1,7 @@
 package com.tmt.challenge.mapper;
 
 import com.tmt.challenge.dto.EmployeeDTO;
-import com.tmt.challenge.dto.response.SearchAssignmentDTO;
+import com.tmt.challenge.dto.response.SearchResponseDTO;
 import com.tmt.challenge.model.Employee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,9 +27,9 @@ public interface EmployeeMapper {
             @Mapping(target = "departmentName", source = "employeeId.department.name"),
             @Mapping(target = "employeeId", source = "employeeId.employeeId")
     })
-    SearchAssignmentDTO toSearchDTO(Employee employee);
+    SearchResponseDTO toSearchDTO(Employee employee);
 
-    List<SearchAssignmentDTO> toSearchDTO(Collection<Employee> employees);
+    List<SearchResponseDTO> toSearchDTO(Collection<Employee> employees);
 
     @Mappings({
             @Mapping(target = "employeeId.department.id", source = "departmentId"),

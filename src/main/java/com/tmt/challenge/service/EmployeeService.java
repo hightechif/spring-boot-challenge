@@ -5,7 +5,7 @@ import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.dto.AssignmentDTO;
 import com.tmt.challenge.dto.EmployeeDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
-import com.tmt.challenge.dto.response.SearchAssignmentDTO;
+import com.tmt.challenge.dto.response.SearchResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.mapper.AssignmentMapper;
 import com.tmt.challenge.mapper.EmployeeMapper;
@@ -50,17 +50,32 @@ public class EmployeeService {
     private EmployeeSpecification employeeSpecification(String keyword, Date date) {
         EmployeeSpecification employeeSpecification = new EmployeeSpecification();
         if (!keyword.equals("") && (date != null)) {
-            System.out.println("Query 1");
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
         } else if (!keyword.equals("") && (date == null)) {
-            System.out.println("Query 2");
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
         } else if (keyword.equals("") && (date != null)){
-            System.out.println("Query 3");
             employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
+        }
+        employeeSpecification.operator(Operator.AND);
+        return employeeSpecification;
+    }
+
+    // Employee 2 Specs private method
+    private EmployeeSpecification employeeSpecification2(String keyword, Date startDate, Date endDate) {
+        System.out.println("MASUK Specification");
+        EmployeeSpecification employeeSpecification = new EmployeeSpecification();
+        if (!keyword.equals("") && (startDate != null) && (endDate != null)) {
+            employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
+            employeeSpecification.add(new SearchCriteria("startDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
+            employeeSpecification.add(new SearchCriteria("endDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
+        } else if (!keyword.equals("") && (startDate == null || endDate == null)) {
+            employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
+        } else if (keyword.equals("") && startDate != null || endDate != null){
+            employeeSpecification.add(new SearchCriteria("startDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
+            employeeSpecification.add(new SearchCriteria("endDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
         }
         employeeSpecification.operator(Operator.AND);
         return employeeSpecification;
@@ -150,8 +165,17 @@ public class EmployeeService {
         return defaultResponseDTO;
     }
 
+    // SEARCH keyword
     @Transactional(readOnly = true)
-    public Page<SearchAssignmentDTO> search(String keyword, Date date, Pageable pageable) {
+    public Page<SearchResponseDTO> search(String keyword, Date date, Pageable pageable) {
         return employeeRepository.findAll(employeeSpecification(keyword, date), pageable).map(employeeMapper::toSearchDTO);
     }
+
+    // SEARCH BETWEEN keyword
+    @Transactional(readOnly = true)
+    public Page<SearchResponseDTO> searchBetween(String keyword, Date startDate, Date endDate, Pageable pageable) {
+        System.out.println("MASUK SERVICE");
+        return employeeRepository.findAll(employeeSpecification2(keyword, startDate, endDate), pageable).map(employeeMapper::toSearchDTO);
+    }
+
 }
