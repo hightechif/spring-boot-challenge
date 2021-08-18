@@ -84,7 +84,6 @@ public class EmployeeController {
         String keyword = request.getKeyword().orElse("");
         Date startDate = request.getStartDate().orElse(null);
         Date endDate = request.getEndDate().orElse(null);
-        System.out.println("MASUK CONTROLLER");
         Page<SearchResponseDTO> response = employeeService.searchBetween(keyword, startDate, endDate, pageable);
         return ResponseEntity.ok().body(response);
     }
