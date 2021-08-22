@@ -1,28 +1,53 @@
 version: "3.9"
 
 services:
-  mysql:
-    container_name: mysql
-    image: mysql:8
+  zookeeper:
+    container_name: zookeeper
+    image: zookeeper
     ports:
-      - 3306:3306
+      - "2181:2181"
     networks:
       - my-net
-  java-api:
-    container_name: java-api
-    image: java-api:1.0
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka
     ports:
-      - 8080:8080
-    depends_on:
-      - mysql
+      - "9092:9092"
+    networks:
+      - my-net
     environment:
-      - MYSQL_HOST=mysql
-      - MYSQL_PORT=3306
-      - MYSQL_ROOT_PASSWORD=admin123
-    networks:
-      - my-net
-
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+#  mysql:
+#    container_name: mysql
+#    image: mysql:8
+#    ports:
+#      - "3306:3306"
+#    networks:
+#      - my-net
+#    volumes:
+#      - mysql-volume:/d/mysql_data
+#    environment:
+#      MYSQL_ROOT_PASSWORD: admin123
+#  java-api:
+#    container_name: java-api
+#    image: java-api:1.0
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mysql
+#    environment:
+#      - MYSQL_HOST=mysql
+#      - MYSQL_PORT=3306
+#      - MYSQL_ROOT_PASSWORD=admin123
+#    networks:
+#      - my-net
+volumes:
+  mysql-volume:
+    external: true
 networks:
   my-net:
     name: my-net
-
