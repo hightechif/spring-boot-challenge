@@ -1,6 +1,6 @@
 package com.tmt.challenge.controller;
 
-import com.tmt.challenge.service.kafka.ProducerClass;
+import com.tmt.challenge.service.kafka.KafkaSenderService;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/kafka")
 public class KafkaController {
 
-    private final ProducerClass producer;
+    private final KafkaSenderService kafkaSenderService;
 
     @Autowired
-    public KafkaController(ProducerClass producer) {
-        this.producer = producer;
+    public KafkaController(KafkaSenderService kafkaSenderService) {
+        this.kafkaSenderService = kafkaSenderService;
     }
 
     @PostMapping("/publish")
     public String sendMessage(@RequestParam("message") String message) {
-        this.producer.sendMessage(message);
+        kafkaSenderService.send(message);
         return "Published successfully";
     }
 

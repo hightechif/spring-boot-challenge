@@ -4,6 +4,7 @@ import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.dto.StudentDTO;
 import com.tmt.challenge.dto.request.StudentRequestDTO;
 import com.tmt.challenge.service.StudentService;
+import com.tmt.challenge.service.kafka.KafkaSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,7 +24,7 @@ public class StudentController {
     private final StudentService studentService;
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, KafkaSenderService kafkaSenderService) {
         this.studentService = studentService;
     }
 
