@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-
 @Service
 public class KafkaSenderService {
 
@@ -23,6 +22,7 @@ public class KafkaSenderService {
     public void send(Object message) {
         ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(KafkaConstant.USER, message);
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+
             @Override
             public void onFailure(Throwable ex) {
                 logger.error("unable to send message=[" + message + "] due to : " + ex.getMessage());
