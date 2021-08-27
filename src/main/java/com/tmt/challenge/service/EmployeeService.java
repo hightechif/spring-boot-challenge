@@ -12,7 +12,7 @@ import com.tmt.challenge.mapper.EmployeeMapper;
 import com.tmt.challenge.model.Assignment;
 import com.tmt.challenge.model.Department;
 import com.tmt.challenge.model.Employee;
-import com.tmt.challenge.model.EmployeeId;
+import com.tmt.challenge.model.composite.EmployeeId;
 import com.tmt.challenge.repository.DepartmentRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
 import com.tmt.challenge.repository.specs.EmployeeSpecification;

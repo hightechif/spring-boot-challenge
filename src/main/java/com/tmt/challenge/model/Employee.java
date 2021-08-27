@@ -1,5 +1,7 @@
 package com.tmt.challenge.model;
 
+import com.tmt.challenge.model.composite.EmployeeId;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

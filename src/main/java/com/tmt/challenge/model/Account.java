@@ -1,5 +1,7 @@
 package com.tmt.challenge.model;
 
+import com.tmt.challenge.model.composite.AccountId;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;

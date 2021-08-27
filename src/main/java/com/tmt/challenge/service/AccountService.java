@@ -5,7 +5,7 @@ import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.mapper.AccountMapper;
 import com.tmt.challenge.model.Account;
-import com.tmt.challenge.model.AccountId;
+import com.tmt.challenge.model.composite.AccountId;
 import com.tmt.challenge.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

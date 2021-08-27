@@ -1,7 +1,7 @@
 package com.tmt.challenge.repository;
 
 import com.tmt.challenge.model.Employee;
-import com.tmt.challenge.model.EmployeeId;
+import com.tmt.challenge.model.composite.EmployeeId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

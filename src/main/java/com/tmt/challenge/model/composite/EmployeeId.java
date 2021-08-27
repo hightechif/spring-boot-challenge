@@ -1,6 +1,7 @@
-package com.tmt.challenge.model;
+package com.tmt.challenge.model.composite;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tmt.challenge.model.Department;
 
 import javax.persistence.*;
 import java.io.Serializable;

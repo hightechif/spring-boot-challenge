@@ -1,4 +1,4 @@
-package com.tmt.challenge.model;
+package com.tmt.challenge.model.composite;
 
 import java.io.Serializable;
 import java.util.Objects;
