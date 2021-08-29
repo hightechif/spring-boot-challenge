@@ -31,7 +31,6 @@ public class BaseEntity implements Serializable {
      */
     @CreatedDate
     @JsonIgnore
-    @Column(updatable = false)
     private Date createdDate = new Date();
 
     @LastModifiedBy

@@ -1,6 +1,8 @@
 package com.tmt.challenge.service;
 
 import com.tmt.challenge.dto.LogAccessDashboardDTO;
+import com.tmt.challenge.dto.response.DefaultResponseDTO;
+import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.model.LogAccessDashboard;
 import com.tmt.challenge.repository.LogAccessDashboardRepository;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -48,6 +51,8 @@ public class LogAccessDashboardService {
         logAccessDashboard.setDeviceUsed(dto.getDeviceUsed());
         logAccessDashboard.setRequestStatus(dto.getRequestStatus());
         logAccessDashboard.setRequestLog(dto.getRequestLog());
+        logAccessDashboard.setCreatedBy(dto.getCreatedBy());
+        logAccessDashboard.setLastModifiedBy(dto.getLastModifiedBy());
 
         logAccessDashboardRepository.save(logAccessDashboard);
     }
@@ -80,10 +85,24 @@ public class LogAccessDashboardService {
         return ipAddress;
     }
 
+    public DefaultResponseDTO update(Long id, LogAccessDashboardDTO dto) {
+        LogAccessDashboard logAccessDashboard = logAccessDashboardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Log with id " + id + " not found"));
+        DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
+        Date createdDate = dto.getCreatedDate();
+        String message = "request success. but, nothing changed";
+        if (dto.getCreatedBy() != null && !Objects.equals(logAccessDashboard.getCreatedDate(), createdDate)) {
+            logAccessDashboard.setCreatedDate(createdDate);
+            message = "resource updated successfully";
+        }
+        defaultResponseDTO.setMessage(message);
+        return defaultResponseDTO;
+    }
+
     public String cleanLog() {
         long logsCount = logAccessDashboardRepository.findLogsBeforeThisMonth();
         String message = "Logs before this month already clean.";
-        logger.debug("Total number of logs before this month = {"+logsCount+"}");
+        logger.debug("Total number of logs before this month = {" + logsCount + "}");
         if (logsCount > 0) {
             logAccessDashboardRepository.cleanLogsBeforeThisMonth();
             message = "Logs before this month cleaned";

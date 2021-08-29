@@ -1,5 +1,7 @@
 package com.tmt.challenge.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,11 +25,17 @@ public class LogAccessDashboardDTO implements Serializable {
     private String sessionKey;
     private Date sessionKeyStartTime;
     private Date sessionKeyExpiredTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdDate;
+    private String createdBy;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastModifiedDate;
+    private String lastModifiedBy;
 
     public LogAccessDashboardDTO() {
     }
 
-    public LogAccessDashboardDTO(long userId, String userName, String reportName, String reportFilter, String pageName, String pageUrl, String appVersion, String deviceUsed, int requestStatus, String requestLog, String sessionKey, Date sessionKeyStartTime, Date sessionKeyExpiredTime) {
+    public LogAccessDashboardDTO(long userId, String userName, String reportName, String reportFilter, String pageName, String pageUrl, String appVersion, String deviceUsed, int requestStatus, String requestLog, String sessionKey, Date sessionKeyStartTime, Date sessionKeyExpiredTime, String createdBy, String lastModifiedBy) {
         this.userId = userId;
         this.userName = userName;
         this.reportName = reportName;
@@ -41,6 +49,8 @@ public class LogAccessDashboardDTO implements Serializable {
         this.sessionKey = sessionKey;
         this.sessionKeyStartTime = sessionKeyStartTime;
         this.sessionKeyExpiredTime = sessionKeyExpiredTime;
+        this.createdBy = createdBy;
+        this.lastModifiedBy = lastModifiedBy;
     }
 
     public long getUserId() {
@@ -147,6 +157,38 @@ public class LogAccessDashboardDTO implements Serializable {
         this.sessionKeyExpiredTime = sessionKeyExpiredTime;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     @Override
     public String toString() {
         return "LogAccessDashboardDTO{" +
@@ -163,6 +205,8 @@ public class LogAccessDashboardDTO implements Serializable {
                 ", sessionKey='" + sessionKey + '\'' +
                 ", sessionKeyStartTime=" + sessionKeyStartTime +
                 ", sessionKeyExpiredTime=" + sessionKeyExpiredTime +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
                 '}';
     }
 }
