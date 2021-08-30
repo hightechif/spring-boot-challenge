@@ -24,7 +24,7 @@ public class StudentController {
     private final StudentService studentService;
 
     @Autowired
-    public StudentController(StudentService studentService, KafkaSenderService kafkaSenderService) {
+    public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
