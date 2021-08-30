@@ -99,13 +99,13 @@ public class LogAccessDashboardService {
         return defaultResponseDTO;
     }
 
-    public String cleanLog() {
-        long logsCount = logAccessDashboardRepository.findLogsBeforeThisMonth();
-        String message = "Logs before this month already clean.";
-        logger.debug("Total number of logs before this month = {" + logsCount + "}");
+    public String cleanLog(int number) {
+        long logsCount = logAccessDashboardRepository.findLogsBeforeTheLastNMonth(number);
+        logger.debug("Total number of logs before the last " + number + " month = {"+logsCount+"}");
+        String message = "Logs before the last " + number + " month already clean.";
         if (logsCount > 0) {
-            logAccessDashboardRepository.cleanLogsBeforeThisMonth();
-            message = "Logs before this month cleaned";
+            logAccessDashboardRepository.cleanLogsBeforeTheLastNNMonth(number);
+            message = "Logs before the last " + number + " month cleaned";
         }
         return message;
     }

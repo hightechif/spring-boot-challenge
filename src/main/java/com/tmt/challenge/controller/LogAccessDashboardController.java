@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/log-access")
@@ -30,9 +31,9 @@ public class LogAccessDashboardController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("/clean-log")
-    public ResponseEntity<String> cleanLogAccessDashboard() {
-        String result = logAccessDashboardService.cleanLog();
+    @DeleteMapping(value = {"/clean-log", "/clean-log/{lastNumberOfMonth}"})
+    public ResponseEntity<String> cleanLogAccessDashboard(@PathVariable(value = "lastNumberOfMonth") Optional<Integer> number) {
+        String result = logAccessDashboardService.cleanLog(number.orElse(1));
         return ResponseEntity.ok().body(result);
     }
 
