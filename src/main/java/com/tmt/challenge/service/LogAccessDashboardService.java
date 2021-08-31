@@ -14,6 +14,10 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -100,14 +104,27 @@ public class LogAccessDashboardService {
     }
 
     public String cleanLog(int number) {
-        long logsCount = logAccessDashboardRepository.findLogsBeforeTheLastNMonth(number);
+        YearMonth currentDate = YearMonth.now();
+        int currentMonth = currentDate.getMonthValue();
+        int prevMonth = currentDate.minusMonths(1).getMonthValue();
+        int currentYear = currentDate.getYear();
+
+        int year = currentYear;
+        int month = currentMonth - number;
+        if (prevMonth > currentMonth) {
+            year = currentYear - 1;
+            month =  12 - (number - 1);
+        }
+        logger.info("current month: "+currentMonth+"; previous month: "+prevMonth+"; current year: "+currentYear);
+        logger.info("used month: "+month+"; used year: "+year);
+
+        long logsCount = logAccessDashboardRepository.findLogsBeforeTheLastNMonth(year, month);
         logger.debug("Total number of logs before the last " + number + " month = {"+logsCount+"}");
         String message = "Logs before the last " + number + " month already clean.";
         if (logsCount > 0) {
-            logAccessDashboardRepository.cleanLogsBeforeTheLastNNMonth(number);
+            logAccessDashboardRepository.cleanLogsBeforeTheLastNNMonth(year, month);
             message = "Logs before the last " + number + " month cleaned";
         }
         return message;
     }
-
 }

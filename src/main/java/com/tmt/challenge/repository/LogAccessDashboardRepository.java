@@ -11,16 +11,18 @@ import org.springframework.stereotype.Repository;
 public interface LogAccessDashboardRepository extends JpaRepository<LogAccessDashboard, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM log_access_dashboard lad " +
-            "WHERE YEAR(lad.created_date) < YEAR(CURDATE()) " +
-            "OR MONTH(lad.created_date) < (MONTH(CURDATE()) - (:number - 1)) " +
+            "WHERE YEAR(lad.created_date) = :year " +
+            "AND MONTH(lad.created_date) <= :month " +
+            "OR YEAR (created_date) < :year " +
             "ORDER BY created_date DESC",
             nativeQuery = true)
-    long findLogsBeforeTheLastNMonth(@Param("number") int number);
+    long findLogsBeforeTheLastNMonth(@Param("year") int year, @Param("month") int month);
 
     @Modifying
     @Query(value = "DELETE FROM log_access_dashboard " +
-            "WHERE YEAR(created_date) < YEAR(CURDATE()) " +
-            "OR MONTH(created_date) < (MONTH(CURDATE()) - (:number - 1))",
+            "WHERE YEAR(created_date) = :year " +
+            "AND MONTH(created_date) <= :month " +
+            "OR YEAR (created_date) < :year",
             nativeQuery = true)
-    void cleanLogsBeforeTheLastNNMonth(@Param("number") int number);
+    void cleanLogsBeforeTheLastNNMonth(@Param("year") int year, @Param("month") int month);
 }
