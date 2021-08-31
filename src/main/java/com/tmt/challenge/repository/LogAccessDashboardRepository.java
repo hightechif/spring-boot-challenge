@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LogAccessDashboardRepository extends JpaRepository<LogAccessDashboard, Long> {
 
-    @Query(value = "SELECT COUNT(*) FROM log_access_dashboard lad " +
-            "WHERE YEAR(lad.created_date) = :year " +
-            "AND MONTH(lad.created_date) <= :month " +
+    @Query(value = "SELECT COUNT(*) FROM log_access_dashboard " +
+            "WHERE YEAR(created_date) = :year " +
+            "AND MONTH(created_date) <= :month " +
             "OR YEAR (created_date) < :year " +
             "ORDER BY created_date DESC",
             nativeQuery = true)
