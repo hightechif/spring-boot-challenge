@@ -43,7 +43,7 @@ public class AuthController {
     @Autowired
     RefreshTokenService refreshTokenService;
 
-    @RequestMapping(value = "/signin", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserLoginDTO userLoginDTO) throws Exception {
 
         Authentication authMngr = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
