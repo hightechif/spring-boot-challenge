@@ -9,6 +9,9 @@ public class JwtResponseDTO {
     private String username;
     private List<String> roles;
 
+    public JwtResponseDTO() {
+    }
+
     public JwtResponseDTO(String accessToken, String refreshToken, String username, List<String> roles) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

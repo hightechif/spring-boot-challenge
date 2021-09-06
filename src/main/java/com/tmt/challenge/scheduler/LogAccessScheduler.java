@@ -32,9 +32,9 @@ public class LogAccessScheduler {
 
     @Scheduled(cron = "0 0 1 * * ?")
     public void cleanLogDashboard() throws JsonProcessingException {
-        logger.info("[survey service][log dashboard] CLEAN_LOG_URL: {}", CLEAN_LOG_URL);
+        logger.info("[survey service][clean log] CLEAN_LOG_URL: {}", CLEAN_LOG_URL);
         this.accessToken = authService.login();
-        logger.info("[survey service][customerProcess] accessToken: {}", this.accessToken);
+        logger.info("[survey service][clean log] accessToken: {}", this.accessToken);
         if (this.accessToken != null) {
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -44,9 +44,9 @@ public class LogAccessScheduler {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.exchange(CLEAN_LOG_URL, HttpMethod.DELETE, entity, String.class);
             if (response.getStatusCode() != HttpStatus.OK) {
-                logger.error("Failed request productProcess {}", response.getStatusCodeValue());
+                logger.error("Failed request clean log {}", response.getStatusCodeValue());
             }
-            logger.info("[survey service][productProcess] Status: {}", response.getStatusCodeValue());
+            logger.info("[survey service][clean log] Status: {}", response.getStatusCodeValue());
         }
     }
 }

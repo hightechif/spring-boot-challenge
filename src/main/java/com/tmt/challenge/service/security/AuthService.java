@@ -2,7 +2,7 @@ package com.tmt.challenge.service.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tmt.challenge.dto.request.LoginResponse;
+import com.tmt.challenge.dto.response.JwtResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,8 +41,8 @@ public class AuthService {
         logger.info("[survey service][login] response: {}", response.getBody());
         if (response.getStatusCode() == HttpStatus.OK) {
             ObjectMapper objectMapper = new ObjectMapper();
-            LoginResponse res = objectMapper.readValue(response.getBody(), LoginResponse.class);
-            String accessToken = res.getData().getAccess_token();
+            JwtResponseDTO res = objectMapper.readValue(response.getBody(), JwtResponseDTO.class);
+            String accessToken = res.getAccessToken();
             logger.info("[survey service][login] accessToken: {}", accessToken);
             return accessToken;
         }
