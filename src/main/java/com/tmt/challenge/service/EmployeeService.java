@@ -105,14 +105,27 @@ public class EmployeeService {
             }
         });
         Employee employee = employeeMapper.toEmployeeEntity((employeeDTO));
+
+        /**
+         * Address Reference increment
+         * */
+        Long employeeAddressRef = employeeRepository.findLastAddressRefNumber().orElse(0L);
+        employeeAddressRef += 1;
+        employee.setAddressRef(employeeAddressRef);
+        /***/
+
         List<EmployeeAddressDTO> addressDTOS = employeeDTO.getAddress();
         List<EmployeeAddress> addresses = employeeAddressMapper.toEmployeeAddressEntity(addressDTOS);
+        addresses.forEach(x -> x.setEmployee(employee));
+        employee.setAddress(addresses);
         List<AssignmentDTO> assignmentDTOS = employeeDTO.getAssignments();
         List<Assignment> assignments = assignmentMapper.toAssignmentEntity(assignmentDTOS);
         assignments.forEach(x -> x.setEmployee(employee));
         employee.setAssignments(assignments);
         Employee savedData = employeeRepository.save(employee);
-        return employeeMapper.toEmployeeDTO(savedData);
+        EmployeeDTO response = employeeMapper.toEmployeeDTO(savedData);
+        response.setDepartmentName(employeeDepartment.get().getName());
+        return response;
     }
 
     @Transactional(readOnly = true)
@@ -133,13 +146,20 @@ public class EmployeeService {
         return employeeMapper.toEmployeeDTO(employee);
     }
 
-    public DefaultResponseDTO update(Long departmentId, Long employeeId, String name, String phoneNumber) {
+    public DefaultResponseDTO update(Long departmentId, Long employeeId, EmployeeDTO employeeDTO) {
+        String email = employeeDTO.getEmail();
+        String name = employeeDTO.getName();
+        String phoneNumber = employeeDTO.getPhoneNumber();
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
         Employee employee = employeeRepository.findById(new EmployeeId(department, employeeId))
                 .orElseThrow(() -> new ResourceNotFoundException("employee not found"));
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         String message = "request success. but, nothing changed";
+        if (email != null && email.length() > 0 && !Objects.equals(employee.getEmail(), email)) {
+            employee.setEmail(email);
+            message = "resource updated successfully";
+        }
         if (name != null && name.length() > 0 && !Objects.equals(employee.getName(), name)) {
             employee.setName(name);
             message = "resource updated successfully";

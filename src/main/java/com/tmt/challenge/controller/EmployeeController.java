@@ -50,9 +50,8 @@ public class EmployeeController {
     @PutMapping("/edit/{departmentId}/{employeeId}")
     public ResponseEntity<DefaultResponseDTO> update(@PathVariable(value = "departmentId") Long departmentId,
                                                          @PathVariable(value = "employeeId") Long employeeId,
-                                                         @RequestParam(required = false) String name,
-                                                         @RequestParam(required = false) String phoneNumber){
-        DefaultResponseDTO response = employeeService.update(departmentId, employeeId, name, phoneNumber);
+                                                         @RequestBody EmployeeDTO employeeDTO){
+        DefaultResponseDTO response = employeeService.update(departmentId, employeeId, employeeDTO);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 

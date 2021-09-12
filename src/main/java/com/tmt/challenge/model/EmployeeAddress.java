@@ -14,7 +14,7 @@ public class EmployeeAddress {
     private Long id;
     private String name;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "employeeAddressRef", referencedColumnName = "addressId")
+    @JoinColumn(name = "employeeAddressRef", referencedColumnName = "addressRef")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Employee employee;

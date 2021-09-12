@@ -4,6 +4,7 @@ import com.tmt.challenge.model.Employee;
 import com.tmt.challenge.model.composite.EmployeeId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -13,5 +14,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, EmployeeId>,
 
     Optional<Employee> findEmployeeByEmail(String email);
     Optional<Employee> findEmployeeByPhoneNumber(String phone);
+    @Query(value = "SELECT MAX(address_ref) FROM employee",
+            nativeQuery = true)
+    Optional<Long> findLastAddressRefNumber();
 
 }

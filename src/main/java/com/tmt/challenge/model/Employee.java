@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tmt.challenge.model.composite.EmployeeId;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Employee {
+public class Employee implements Serializable {
 
     @EmbeddedId
     private EmployeeId employeeId;
@@ -17,7 +18,8 @@ public class Employee {
     private String name;
     @Column(unique = true)
     private String phoneNumber;
-    private Long addressId;
+    @Column(unique = true)
+    private Long addressRef;
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "employee")
@@ -70,12 +72,12 @@ public class Employee {
         this.phoneNumber = phoneNumber;
     }
 
-    public Long getAddressId() {
-        return addressId;
+    public Long getAddressRef() {
+        return addressRef;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setAddressRef(Long addressRef) {
+        this.addressRef = addressRef;
     }
 
     public List<EmployeeAddress> getAddress() {
@@ -101,6 +103,8 @@ public class Employee {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", addressRef=" + addressRef +
+                ", address=" + address +
                 ", assignments=" + assignments +
                 '}';
     }
