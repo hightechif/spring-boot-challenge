@@ -10,8 +10,22 @@ public class EmployeeDTO {
     private String email;
     private String name;
     private String phoneNumber;
-
+    private List<EmployeeAddressDTO> address;
     private List<AssignmentDTO> assignments;
+
+    public EmployeeDTO() {
+    }
+
+    public EmployeeDTO(Long departmentId, String departmentName, Long employeeId, String email, String name, String phoneNumber, List<EmployeeAddressDTO> address, List<AssignmentDTO> assignments) {
+        this.departmentId = departmentId;
+        this.departmentName = departmentName;
+        this.employeeId = employeeId;
+        this.email = email;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.assignments = assignments;
+    }
 
     public Long getDepartmentId() {
         return departmentId;
@@ -61,6 +75,14 @@ public class EmployeeDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    public List<EmployeeAddressDTO> getAddress() {
+        return address;
+    }
+
+    public void setAddress(List<EmployeeAddressDTO> address) {
+        this.address = address;
+    }
+
     public List<AssignmentDTO> getAssignments() {
         return assignments;
     }
@@ -73,10 +95,12 @@ public class EmployeeDTO {
     public String toString() {
         return "EmployeeDTO{" +
                 "departmentId=" + departmentId +
+                ", departmentName='" + departmentName + '\'' +
                 ", employeeId=" + employeeId +
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", address=" + address +
                 ", assignments=" + assignments +
                 '}';
     }

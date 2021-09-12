@@ -1,5 +1,6 @@
 package com.tmt.challenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tmt.challenge.model.composite.EmployeeId;
 
 import javax.persistence.*;
@@ -16,6 +17,12 @@ public class Employee {
     private String name;
     @Column(unique = true)
     private String phoneNumber;
+    private Long addressId;
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "employee")
+    @JsonIgnore
+    private List<EmployeeAddress> address;
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "employee")
@@ -61,6 +68,22 @@ public class Employee {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
+
+    public List<EmployeeAddress> getAddress() {
+        return address;
+    }
+
+    public void setAddress(List<EmployeeAddress> address) {
+        this.address = address;
     }
 
     public List<Assignment> getAssignments() {

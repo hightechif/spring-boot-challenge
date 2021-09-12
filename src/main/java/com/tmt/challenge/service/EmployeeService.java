@@ -3,15 +3,18 @@ package com.tmt.challenge.service;
 import com.tmt.challenge.constant.enums.Operator;
 import com.tmt.challenge.constant.enums.SearchOperation;
 import com.tmt.challenge.dto.AssignmentDTO;
+import com.tmt.challenge.dto.EmployeeAddressDTO;
 import com.tmt.challenge.dto.EmployeeDTO;
 import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.dto.response.SearchResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.mapper.AssignmentMapper;
+import com.tmt.challenge.mapper.EmployeeAddressMapper;
 import com.tmt.challenge.mapper.EmployeeMapper;
 import com.tmt.challenge.model.Assignment;
 import com.tmt.challenge.model.Department;
 import com.tmt.challenge.model.Employee;
+import com.tmt.challenge.model.EmployeeAddress;
 import com.tmt.challenge.model.composite.EmployeeId;
 import com.tmt.challenge.repository.DepartmentRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
@@ -36,13 +39,15 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final EmployeeMapper employeeMapper;
+    private final EmployeeAddressMapper employeeAddressMapper;
     private final AssignmentMapper assignmentMapper;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, AssignmentMapper assignmentMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, EmployeeAddressMapper employeeAddressMapper, AssignmentMapper assignmentMapper) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.employeeMapper = employeeMapper;
+        this.employeeAddressMapper = employeeAddressMapper;
         this.assignmentMapper = assignmentMapper;
     }
 
@@ -55,7 +60,7 @@ public class EmployeeService {
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
         } else if (!keyword.equals("") && (date == null)) {
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
-        } else if (keyword.equals("") && (date != null)){
+        } else if (keyword.equals("") && (date != null)) {
             employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
         }
@@ -71,7 +76,7 @@ public class EmployeeService {
             employeeSpecification.add(new SearchCriteria("startDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
         } else if (!keyword.equals("") && (startDate == null || endDate == null)) {
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
-        } else if (keyword.equals("") && startDate != null || endDate != null){
+        } else if (keyword.equals("") && startDate != null || endDate != null) {
             employeeSpecification.add(new SearchCriteria("startDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
         }
         employeeSpecification.operator(Operator.AND);
@@ -100,6 +105,8 @@ public class EmployeeService {
             }
         });
         Employee employee = employeeMapper.toEmployeeEntity((employeeDTO));
+        List<EmployeeAddressDTO> addressDTOS = employeeDTO.getAddress();
+        List<EmployeeAddress> addresses = employeeAddressMapper.toEmployeeAddressEntity(addressDTOS);
         List<AssignmentDTO> assignmentDTOS = employeeDTO.getAssignments();
         List<Assignment> assignments = assignmentMapper.toAssignmentEntity(assignmentDTOS);
         assignments.forEach(x -> x.setEmployee(employee));
