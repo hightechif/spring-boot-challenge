@@ -47,11 +47,9 @@ public class EmployeeController {
         return ResponseEntity.created(URI.create("/create/")).body(responseData);
     }
 
-    @PutMapping("/edit/{departmentId}/{employeeId}")
-    public ResponseEntity<DefaultResponseDTO> update(@PathVariable(value = "departmentId") Long departmentId,
-                                                         @PathVariable(value = "employeeId") Long employeeId,
-                                                         @RequestBody EmployeeDTO employeeDTO){
-        DefaultResponseDTO response = employeeService.update(departmentId, employeeId, employeeDTO);
+    @PutMapping("/edit")
+    public ResponseEntity<DefaultResponseDTO> update(@RequestBody EmployeeDTO employeeDTO) {
+        DefaultResponseDTO response = employeeService.update(employeeDTO);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 

@@ -17,6 +17,7 @@ import com.tmt.challenge.model.Employee;
 import com.tmt.challenge.model.EmployeeAddress;
 import com.tmt.challenge.model.composite.EmployeeId;
 import com.tmt.challenge.repository.DepartmentRepository;
+import com.tmt.challenge.repository.EmployeeAddressRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
 import com.tmt.challenge.repository.specs.EmployeeSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
@@ -37,14 +38,16 @@ import java.util.Optional;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmployeeAddressRepository employeeAddressRepository;
     private final DepartmentRepository departmentRepository;
     private final EmployeeMapper employeeMapper;
     private final EmployeeAddressMapper employeeAddressMapper;
     private final AssignmentMapper assignmentMapper;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, EmployeeAddressMapper employeeAddressMapper, AssignmentMapper assignmentMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeAddressRepository employeeAddressRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, EmployeeAddressMapper employeeAddressMapper, AssignmentMapper assignmentMapper) {
         this.employeeRepository = employeeRepository;
+        this.employeeAddressRepository = employeeAddressRepository;
         this.departmentRepository = departmentRepository;
         this.employeeMapper = employeeMapper;
         this.employeeAddressMapper = employeeAddressMapper;
@@ -146,14 +149,23 @@ public class EmployeeService {
         return employeeMapper.toEmployeeDTO(employee);
     }
 
-    public DefaultResponseDTO update(Long departmentId, Long employeeId, EmployeeDTO employeeDTO) {
-        String email = employeeDTO.getEmail();
-        String name = employeeDTO.getName();
-        String phoneNumber = employeeDTO.getPhoneNumber();
+    public DefaultResponseDTO update(EmployeeDTO employeeDTO) {
+        Long departmentId = employeeDTO.getDepartmentId();
+        Long employeeId = employeeDTO.getEmployeeId();
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
         Employee employee = employeeRepository.findById(new EmployeeId(department, employeeId))
                 .orElseThrow(() -> new ResourceNotFoundException("employee not found"));
+        String email = employeeDTO.getEmail();
+        String name = employeeDTO.getName();
+        String phoneNumber = employeeDTO.getPhoneNumber();
+        List<EmployeeAddressDTO> addressDTOS = employeeDTO.getAddress();
+        List<EmployeeAddress> address = employeeAddressMapper.toEmployeeAddressEntity(addressDTOS);
+        address.forEach(x -> x.setEmployee(employee));
+        Long addressRef = employee.getAddressRef();
+        List<AssignmentDTO> assignmentDTOS = employeeDTO.getAssignments();
+        List<Assignment> assignments = assignmentMapper.toAssignmentEntity(assignmentDTOS);
+        assignments.forEach(x -> x.setEmployee(employee));
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         String message = "request success. but, nothing changed";
         if (email != null && email.length() > 0 && !Objects.equals(employee.getEmail(), email)) {
@@ -166,6 +178,15 @@ public class EmployeeService {
         }
         if (phoneNumber != null && phoneNumber.length() > 0 && !Objects.equals(employee.getPhoneNumber(), phoneNumber)) {
             employee.setPhoneNumber(phoneNumber);
+            message = "resource updated successfully";
+        }
+        if (!Objects.equals(employee.getAddress(), address)) {
+            employeeAddressRepository.deleteEmployeeAddressByEmployee_AddressRef(addressRef);
+            employee.setAddress(address);
+            message = "resource updated successfully";
+        }
+        if (!Objects.equals(employee.getAssignments(), assignments)) {
+            employee.setAssignments(assignments);
             message = "resource updated successfully";
         }
         defaultResponseDTO.setStatus(HttpStatus.ACCEPTED.value());

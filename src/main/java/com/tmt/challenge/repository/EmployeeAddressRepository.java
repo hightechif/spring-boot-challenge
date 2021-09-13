@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeeAddressRepository extends JpaRepository<EmployeeAddress, Long> {
 
+    void deleteEmployeeAddressByEmployee_AddressRef(Long addressRef);
+
 }
