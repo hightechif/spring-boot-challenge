@@ -1,6 +1,5 @@
 package com.tmt.challenge.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,7 +15,6 @@ public class EmployeeAddress {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employeeAddressRef", referencedColumnName = "addressRef")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Employee employee;
 
     public EmployeeAddress() {

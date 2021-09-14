@@ -21,6 +21,8 @@ import com.tmt.challenge.repository.EmployeeAddressRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
 import com.tmt.challenge.repository.specs.EmployeeSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +38,8 @@ import java.util.Optional;
 @Service
 @Transactional
 public class EmployeeService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeAddressRepository employeeAddressRepository;
@@ -131,12 +135,14 @@ public class EmployeeService {
         return response;
     }
 
+    // Get All Employee
     @Transactional(readOnly = true)
     public List<EmployeeDTO> getAll() {
         List<Employee> employees = employeeRepository.findAll();
         return employeeMapper.toEmployeeDTO(employees);
     }
 
+    // Get Employee By ID
     @Transactional(readOnly = true)
     public EmployeeDTO get(Long departmentId, Long employeeId) {
         Department department = departmentRepository.findById(departmentId)
@@ -149,6 +155,7 @@ public class EmployeeService {
         return employeeMapper.toEmployeeDTO(employee);
     }
 
+    // Update an Employee
     public DefaultResponseDTO update(EmployeeDTO employeeDTO) {
         Long departmentId = employeeDTO.getDepartmentId();
         Long employeeId = employeeDTO.getEmployeeId();
@@ -181,7 +188,7 @@ public class EmployeeService {
             message = "resource updated successfully";
         }
         if (!Objects.equals(employee.getAddress(), address)) {
-            employeeAddressRepository.deleteEmployeeAddressByEmployee_AddressRef(addressRef);
+            employeeAddressRepository.deleteEmployeeAddressByEmployeeAddressRef(addressRef);
             employee.setAddress(address);
             message = "resource updated successfully";
         }
@@ -194,6 +201,7 @@ public class EmployeeService {
         return defaultResponseDTO;
     }
 
+    // Delete an Employee
     public DefaultResponseDTO delete(Long departmentId, Long employeeId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));

@@ -1,6 +1,5 @@
 package com.tmt.challenge.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tmt.challenge.model.composite.EmployeeId;
 
 import javax.persistence.*;
@@ -23,8 +22,7 @@ public class Employee implements Serializable {
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "employee")
-    @JsonIgnore
-    private List<EmployeeAddress> address;
+    private List<EmployeeAddress> address = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "employee")
