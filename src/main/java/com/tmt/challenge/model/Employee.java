@@ -21,7 +21,8 @@ public class Employee implements Serializable {
     private Long addressRef;
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "employee")
+            mappedBy = "employee",
+            orphanRemoval = true)
     private List<EmployeeAddress> address = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,

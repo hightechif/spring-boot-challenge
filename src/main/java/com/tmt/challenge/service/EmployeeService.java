@@ -39,7 +39,7 @@ import java.util.Optional;
 @Transactional
 public class EmployeeService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeAddressRepository employeeAddressRepository;
@@ -96,14 +96,17 @@ public class EmployeeService {
         if (employeeDepartment.isEmpty()) {
             throw new IllegalStateException("department id didn't exist");
         }
+
         Optional<Employee> employeeWithEmail = employeeRepository.findEmployeeByEmail(employeeDTO.getEmail());
         if (employeeWithEmail.isPresent()) {
             throw new IllegalStateException("email already exist");
         }
+
         Optional<Employee> employeeWithPhone = employeeRepository.findEmployeeByPhoneNumber(employeeDTO.getPhoneNumber());
         if (employeeWithPhone.isPresent()) {
             throw new IllegalStateException("phone already exist");
         }
+
         employeeDTO.getAssignments().forEach(x -> {
             Date startDate = x.getStartDate();
             Date endDate = x.getEndDate();
@@ -113,22 +116,21 @@ public class EmployeeService {
         });
         Employee employee = employeeMapper.toEmployeeEntity((employeeDTO));
 
-        /**
-         * Address Reference increment
-         * */
+        //Address Reference increment
         Long employeeAddressRef = employeeRepository.findLastAddressRefNumber().orElse(0L);
         employeeAddressRef += 1;
         employee.setAddressRef(employeeAddressRef);
-        /***/
 
         List<EmployeeAddressDTO> addressDTOS = employeeDTO.getAddress();
         List<EmployeeAddress> addresses = employeeAddressMapper.toEmployeeAddressEntity(addressDTOS);
         addresses.forEach(x -> x.setEmployee(employee));
         employee.setAddress(addresses);
+
         List<AssignmentDTO> assignmentDTOS = employeeDTO.getAssignments();
         List<Assignment> assignments = assignmentMapper.toAssignmentEntity(assignmentDTOS);
         assignments.forEach(x -> x.setEmployee(employee));
         employee.setAssignments(assignments);
+
         Employee savedData = employeeRepository.save(employee);
         EmployeeDTO response = employeeMapper.toEmployeeDTO(savedData);
         response.setDepartmentName(employeeDepartment.get().getName());
@@ -159,22 +161,27 @@ public class EmployeeService {
     public DefaultResponseDTO update(EmployeeDTO employeeDTO) {
         Long departmentId = employeeDTO.getDepartmentId();
         Long employeeId = employeeDTO.getEmployeeId();
+
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
         Employee employee = employeeRepository.findById(new EmployeeId(department, employeeId))
                 .orElseThrow(() -> new ResourceNotFoundException("employee not found"));
+
         String email = employeeDTO.getEmail();
         String name = employeeDTO.getName();
         String phoneNumber = employeeDTO.getPhoneNumber();
+
         List<EmployeeAddressDTO> addressDTOS = employeeDTO.getAddress();
         List<EmployeeAddress> address = employeeAddressMapper.toEmployeeAddressEntity(addressDTOS);
         address.forEach(x -> x.setEmployee(employee));
-        Long addressRef = employee.getAddressRef();
+
         List<AssignmentDTO> assignmentDTOS = employeeDTO.getAssignments();
         List<Assignment> assignments = assignmentMapper.toAssignmentEntity(assignmentDTOS);
         assignments.forEach(x -> x.setEmployee(employee));
+
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
         String message = "request success. but, nothing changed";
+
         if (email != null && email.length() > 0 && !Objects.equals(employee.getEmail(), email)) {
             employee.setEmail(email);
             message = "resource updated successfully";
@@ -188,14 +195,18 @@ public class EmployeeService {
             message = "resource updated successfully";
         }
         if (!Objects.equals(employee.getAddress(), address)) {
-            employeeAddressRepository.deleteEmployeeAddressByEmployeeAddressRef(addressRef);
-            employee.setAddress(address);
+            address.forEach(x -> {
+                logger.info("New address added: { "+x.getName()+" }");
+            });
+            employee.getAddress().clear();
+            employee.getAddress().addAll(address);
             message = "resource updated successfully";
         }
         if (!Objects.equals(employee.getAssignments(), assignments)) {
             employee.setAssignments(assignments);
             message = "resource updated successfully";
         }
+
         defaultResponseDTO.setStatus(HttpStatus.ACCEPTED.value());
         defaultResponseDTO.setMessage(message);
         return defaultResponseDTO;

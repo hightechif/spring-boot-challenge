@@ -94,7 +94,7 @@ public class StudentController {
      * {@code GET /students/search} : search all students
      * @param keyword the keyword for filter student
      * @param pageable the pagination information
-     *
+     * @return ResponseEntity<Page<StudentDTO>>
      * */
     @GetMapping("/search")
     public ResponseEntity<Page<StudentDTO>> search(@RequestParam Optional<String> keyword, Pageable pageable) {

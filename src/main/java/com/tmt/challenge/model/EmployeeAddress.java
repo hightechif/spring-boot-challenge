@@ -1,8 +1,5 @@
 package com.tmt.challenge.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +11,6 @@ public class EmployeeAddress {
     private String name;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employeeAddressRef", referencedColumnName = "addressRef")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Employee employee;
 
     public EmployeeAddress() {
