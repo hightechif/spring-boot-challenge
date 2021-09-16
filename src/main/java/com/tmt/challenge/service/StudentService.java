@@ -20,6 +20,7 @@ import com.tmt.challenge.model.StudentIdCard;
 import com.tmt.challenge.repository.StudentRepository;
 import com.tmt.challenge.repository.specs.SearchCriteria;
 import com.tmt.challenge.repository.specs.StudentSpecification;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,7 +50,13 @@ public class StudentService {
         this.courseMapper = courseMapper;
     }
 
-    // Student Specs private method
+    /**
+     * {@code Student Specs private method} : create a student specification from a keyword
+     *
+     * @param keyword the first input string
+     * @return return a student specification
+     * */
+    @NotNull
     private StudentSpecification studentSpecification(String keyword) {
         StudentSpecification studentSpecification = new StudentSpecification();
         studentSpecification.add(new SearchCriteria("email", keyword, SearchOperation.MATCH, null, null, null));
@@ -59,8 +66,37 @@ public class StudentService {
         return studentSpecification;
     }
 
-    // CREATE New Student
-    public DefaultResponseDTO create(StudentRequestDTO studentRequest) {
+    /**
+     * {@code student service get method} : READ All Students
+     *
+     * @return return student DTO list
+     * */
+    @Transactional(readOnly = true)
+    public List<StudentDTO> getAll() {
+        List<Student> students = studentRepository.findAll();
+        return studentMapper.toStudentDTO(students);
+    }
+
+    /**
+     * {@code student service get method} : READ Student by ID
+     *
+     * @param studentId the first input long
+     * @return return a response entity of student DTO
+     * */
+    @Transactional(readOnly = true)
+    public StudentDTO get(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
+        return studentMapper.toStudentDTO(student);
+    }
+
+    /**
+     * {@code student service create method} : CREATE New Student
+     *
+     * @param studentRequest the first input student request DTO
+     * @return return a default response DTO
+     * */
+    public DefaultResponseDTO create(@NotNull StudentRequestDTO studentRequest) {
         // Check Student with existing email
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(studentRequest.getEmail());
         if (studentOptional.isPresent()) {
@@ -88,22 +124,12 @@ public class StudentService {
         return new DefaultResponseDTO("resource created successfully", 201);
     }
 
-    // READ All Students
-    @Transactional(readOnly = true)
-    public List<StudentDTO> getAll() {
-        List<Student> students = studentRepository.findAll();
-        return studentMapper.toStudentDTO(students);
-    }
-
-    // READ Student by ID
-    @Transactional(readOnly = true)
-    public StudentDTO get(Long studentId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
-        return studentMapper.toStudentDTO(student);
-    }
-
-    // READ Student by Email
+    /**
+     * {@code student service getByEmail method} : READ Student by Email
+     *
+     * @param email the first input string
+     * @return return a student DTO
+     * */
     @Transactional(readOnly = true)
     public StudentDTO getByEmail(String email) {
         Student student = studentRepository.findStudentByEmail(email)
@@ -111,7 +137,39 @@ public class StudentService {
         return studentMapper.toStudentDTO(student);
     }
 
-    // UPDATE Student
+    /**
+     * {@code student service getByCardNumber method} : READ Student by Card Number
+     *
+     * @param cardNumber the first input string
+     * @return return a student DTO
+     * */
+    @Transactional(readOnly = true)
+    public StudentDTO getByCardNumber(String cardNumber) {
+        Student student = studentRepository.findStudentByStudentIdCardCardNumber(cardNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("student ID with cardNumber " + cardNumber + " not found"));
+        return studentMapper.toStudentDTO(student);
+    }
+
+    /**
+     * {@code student service getByDepartment method} : READ Student by Department
+     *
+     * @param department the first input string
+     * @return return student DTO list
+     * */
+    @Transactional(readOnly = true)
+    public List<StudentDTO> getByDepartment(String department) {
+        List<Student> studentList = studentRepository.findStudentByCoursesDepartment(department);
+        return studentMapper.toStudentDTO(studentList);
+    }
+
+    /**
+     * {@code student service update method} : UPDATE Student
+     *
+     * @param studentId the first input long
+     * @param firstName the second input string
+     * @param lastName the third input string
+     * @return return a default response DTO
+     * */
     public DefaultResponseDTO update(Long studentId, String firstName, String lastName) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("student with id " + studentId + " not found"));
@@ -129,7 +187,12 @@ public class StudentService {
         return defaultResponseDTO;
     }
 
-    // DELETE Student
+    /**
+     * {@code student service delete method} : DELETE Student
+     *
+     * @param studentId the first input long
+     * @return return a default response DTO
+     * */
     public DefaultResponseDTO delete(Long studentId) {
         boolean isStudentExist = studentRepository.existsById(studentId);
         DefaultResponseDTO defaultResponseDTO = new DefaultResponseDTO();
@@ -143,36 +206,39 @@ public class StudentService {
         return defaultResponseDTO;
     }
 
-    // READ Student by Card Number
-    @Transactional(readOnly = true)
-    public StudentDTO getByCardNumber(String cardNumber) {
-        Student student = studentRepository.findStudentByStudentIdCardCardNumber(cardNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("student ID with cardNumber " + cardNumber + " not found"));
-        return studentMapper.toStudentDTO(student);
-    }
-
-    // READ Student by Department
-    @Transactional(readOnly = true)
-    public List<StudentDTO> getByDepartment(String department) {
-        List<Student> studentList = studentRepository.findStudentByCoursesDepartment(department);
-        return studentMapper.toStudentDTO(studentList);
-    }
-
-    // READ Students by Book Name
+    /**
+     * {@code student service getByBookName method} : READ Students by Book Name
+     *
+     * @param bookName the first input string
+     * @param pageable the second input pageable
+     * @return return student DTO page
+     * */
     @Transactional(readOnly = true)
     public Page<StudentDTO> getByBookName(String bookName, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findStudentsByBookName(bookName, pageable);
         return studentPage.map(studentMapper::toStudentDTO);
     }
 
-    // READ Students by Course Name
+    /**
+     * {@code student service getByCourseName method} : READ Students by Course Name
+     *
+     * @param courseName the first input string
+     * @param pageable the second input pageable
+     * @return return student DTO page
+     * */
     @Transactional(readOnly = true)
     public Page<StudentDTO> getByCourseName(String courseName, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findStudentsByCourseName(courseName, pageable);
         return studentPage.map(studentMapper::toStudentDTO);
     }
 
-    // SEARCH keyword
+    /**
+     * {@code student service search method} : SEARCH all students with specification
+     *
+     * @param keyword the keyword for filter student
+     * @param pageable the pagination information
+     * @return return student DTO page
+     * */
     @Transactional(readOnly = true)
     public Page<StudentDTO> search(String keyword, Pageable pageable) {
         return studentRepository.findAll(studentSpecification(keyword), pageable).map(studentMapper::toStudentDTO);

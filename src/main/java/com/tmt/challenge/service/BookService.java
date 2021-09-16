@@ -12,6 +12,7 @@ import com.tmt.challenge.repository.BookRepository;
 import com.tmt.challenge.repository.StudentRepository;
 import com.tmt.challenge.repository.specs.BookSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,13 @@ public class BookService {
         this.bookMapper = bookMapper;
     }
 
-    // Book Specs private method
+    /**
+     * {@code Book Specs private method} : create a book specification from a keyword
+     *
+     * @param keyword the first input string
+     * @return return a book specification
+     */
+    @NotNull
     private BookSpecification bookSpecification(String keyword) {
         BookSpecification bookSpecification = new BookSpecification();
         bookSpecification.add(new SearchCriteria("bookName", keyword, SearchOperation.MATCH, null, null, null));
@@ -46,14 +53,27 @@ public class BookService {
         return bookSpecification;
     }
 
-    // READ All Book by Student ID
+    /**
+     * {@code book service getAllBooksByStudentId method} : READ All Books by Student ID
+     *
+     * @param studentId the first input long
+     * @param pageable  the second input pageable
+     * @return return book DTO page
+     */
     @Transactional(readOnly = true)
     public Page<BookDTO> getAllBooksByStudentId(Long studentId, Pageable pageable) {
         Page<Book> bookPage = bookRepository.findByStudentId(studentId, pageable);
         return bookPage.map(bookMapper::toBookDTO);
     }
 
-    // UPDATE Book
+    /**
+     * {@code book service updateBook method} : UPDATE Book
+     *
+     * @param studentId   the first input long
+     * @param bookId      the second input long
+     * @param bookRequest the third input book
+     * @return return a book DTO
+     */
     public BookDTO updateBook(Long studentId, Long bookId, Book bookRequest) {
         if (!studentRepository.existsById(studentId)) {
             throw new ResourceNotFoundException("StudentId " + studentId + " not found");
@@ -66,7 +86,13 @@ public class BookService {
         return bookMapper.toBookDTO(bookResponse);
     }
 
-    // DELETE Book
+    /**
+     * {@code book service deleteBook method} : DELETE Book
+     *
+     * @param studentId the first input long
+     * @param bookId    the second input long
+     * @return return a default response DTO
+     */
     public DefaultResponseDTO deleteBook(Long studentId, Long bookId) {
         return bookRepository.findByIdAndStudentId(bookId, studentId).map(book -> {
             bookRepository.delete(book);
@@ -74,14 +100,24 @@ public class BookService {
         }).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + bookId + " and studentId " + studentId));
     }
 
-    // GET All Books
+    /**
+     * {@code book service getAllBooks method} : GET All Books
+     *
+     * @param pageable the first input pageable
+     * @return return a Book with Student DTO page
+     */
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> getAllBooks(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
         return booksPage.map(bookMapper::toBookWithStudentDTO);
     }
 
-    // GET Book by ID
+    /**
+     * {@code book service getBookById method} : GET Book by ID
+     *
+     * @param bookId the first input long
+     * @return return a Book with Student DTO
+     */
     @Transactional(readOnly = true)
     public BookWithStudentDTO getBookById(Long bookId) {
         Optional<Book> bookOptional = bookRepository.findById(bookId);
@@ -92,7 +128,13 @@ public class BookService {
         return bookMapper.toBookWithStudentDTO(book);
     }
 
-    // SEARCH Book
+    /**
+     * {@code book service search method} : SEARCH Book
+     *
+     * @param keyword  the keyword for filter bookName, firstName, lastName, and/or email
+     * @param pageable the pagination information
+     * @return return a Book with Student DTO page
+     */
     @Transactional(readOnly = true)
     public Page<BookWithStudentDTO> search(String keyword, Pageable pageable) {
         Page<Book> books = bookRepository.findAll(bookSpecification(keyword), pageable);
