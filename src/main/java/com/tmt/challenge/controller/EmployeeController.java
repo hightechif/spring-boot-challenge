@@ -28,12 +28,23 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    /**
+     * {@code GET /api/v1/employees} : get a list of all employees
+     *
+     * @return return a response entity of employee DTO list
+     */
     @GetMapping("/")
     public ResponseEntity<List<EmployeeDTO>> getAll() {
         List<EmployeeDTO> employeeDTOS = employeeService.getAll();
         return new ResponseEntity<>(employeeDTOS, HttpStatus.OK);
     }
 
+    /**
+     * {@code GET /api/v1/employees/{employeeId}} : get employee by ID
+     *
+     * @param employeeId the first input long
+     * @return return a response entity of employee DTO
+     */
     @GetMapping("/{departmentId}/{employeeId}")
     public ResponseEntity<EmployeeDTO> get(@PathVariable(value = "departmentId") Long departmentId,
                                                @PathVariable(value = "employeeId") Long employeeId) {
@@ -41,18 +52,37 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
     }
 
+    /**
+     * {@code POST /api/v1/employees/create} : create a new employee
+     *
+     * @param employeeDTO the first input employee DTO
+     * @return return a response entity ofe employee DTO
+     */
     @PostMapping("/create")
     public ResponseEntity<EmployeeDTO> create(@RequestBody EmployeeDTO employeeDTO) {
         EmployeeDTO responseData = employeeService.create(employeeDTO);
         return ResponseEntity.created(URI.create("/create/")).body(responseData);
     }
 
+    /**
+     * {@code PUT /api/v1/employees/edit/{employeeId}} : update employee
+     *
+     * @param employeeDTO the first input long
+     * @return return a response entity of default response DTO
+     */
     @PutMapping("/edit")
     public ResponseEntity<DefaultResponseDTO> update(@RequestBody EmployeeDTO employeeDTO) {
         DefaultResponseDTO response = employeeService.update(employeeDTO);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
+    /**
+     * {@code DELETE /api/v1/employees/delete/{departmentId}/{employeeId}} : delete employee by department ID and employee ID
+     *
+     * @param departmentId the first input long
+     * @param employeeId the second input long
+     * @return return a response entity of default response DTO
+     */
     @DeleteMapping("/delete/{departmentId}/{employeeId}")
     public ResponseEntity<DefaultResponseDTO> delete(@PathVariable(value = "departmentId") Long departmentId,
                                                          @PathVariable(value = "employeeId") Long employeeId) {
@@ -65,6 +95,7 @@ public class EmployeeController {
      *
      * @param request  the request DTO consist of keyword and date for filter title of employee assignment
      * @param pageable the pagination information
+     * @return return a response entity of search response DTO page
      */
     @GetMapping("/search")
     public ResponseEntity<Page<SearchResponseDTO>> search(@RequestBody SearchRequestDTO request,
@@ -75,6 +106,13 @@ public class EmployeeController {
         return ResponseEntity.ok().body(response);
     }
 
+    /**
+     * {@code GET /employees/search-between} : search all employees from related keyword between dates
+     *
+     * @param request  the request DTO consist of keyword and date for filter title of employee assignment
+     * @param pageable the pagination information
+     * @return return a response entity of search response DTO page
+     */
     @GetMapping("/search-between")
     public ResponseEntity<Page<SearchResponseDTO>> searchBetween(@RequestBody SearchBetweenDTO request,
                                                                  Pageable pageable) {
