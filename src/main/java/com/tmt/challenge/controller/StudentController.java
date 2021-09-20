@@ -38,7 +38,7 @@ public class StudentController {
     }
 
     /**
-     * {@code GET /api/v1/students/{studentId}} : get students by card number
+     * {@code GET /api/v1/students/{studentId}} : get students by ID
      *
      * @param studentId the first input long
      * @return return a response entity of student DTO
@@ -98,7 +98,7 @@ public class StudentController {
     }
 
     /**
-     * {@code PUT /api/v1/students/get-by-book-name} : get students by book name
+     * {@code PUT /api/v1/students/edit/{studentId}} : update student
      *
      * @param studentId the first input long
      * @param firstName the second input string
