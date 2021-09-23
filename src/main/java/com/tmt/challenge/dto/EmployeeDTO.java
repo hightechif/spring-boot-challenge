@@ -1,5 +1,9 @@
 package com.tmt.challenge.dto;
 
+import com.tmt.challenge.constant.enums.EmploymentStatus;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.List;
 
 public class EmployeeDTO {
@@ -10,19 +14,21 @@ public class EmployeeDTO {
     private String email;
     private String name;
     private String phoneNumber;
+    private EmploymentStatus employmentStatus;
     private List<EmployeeAddressDTO> address;
     private List<AssignmentDTO> assignments;
 
     public EmployeeDTO() {
     }
 
-    public EmployeeDTO(Long departmentId, String departmentName, Long employeeId, String email, String name, String phoneNumber, List<EmployeeAddressDTO> address, List<AssignmentDTO> assignments) {
+    public EmployeeDTO(Long departmentId, String departmentName, Long employeeId, String email, String name, String phoneNumber, EmploymentStatus employmentStatus, List<EmployeeAddressDTO> address, List<AssignmentDTO> assignments) {
         this.departmentId = departmentId;
         this.departmentName = departmentName;
         this.employeeId = employeeId;
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.employmentStatus = employmentStatus;
         this.address = address;
         this.assignments = assignments;
     }
@@ -73,6 +79,14 @@ public class EmployeeDTO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public EmploymentStatus getEmploymentStatus() {
+        return employmentStatus;
+    }
+
+    public void setEmploymentStatus(EmploymentStatus employmentStatus) {
+        this.employmentStatus = employmentStatus;
     }
 
     public List<EmployeeAddressDTO> getAddress() {

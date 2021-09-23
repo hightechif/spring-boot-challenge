@@ -1,5 +1,6 @@
 package com.tmt.challenge.model;
 
+import com.tmt.challenge.constant.enums.EmploymentStatus;
 import com.tmt.challenge.model.composite.EmployeeId;
 
 import javax.persistence.*;
@@ -19,6 +20,8 @@ public class Employee implements Serializable {
     private String phoneNumber;
     @Column(unique = true)
     private Long addressRef;
+    @Enumerated(EnumType.STRING)
+    private EmploymentStatus employmentStatus;
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "employee",
@@ -32,11 +35,12 @@ public class Employee implements Serializable {
     public Employee() {
     }
 
-    public Employee(EmployeeId employeeId, String email, String name, String phoneNumber) {
+    public Employee(EmployeeId employeeId, String email, String name, String phoneNumber, EmploymentStatus employmentStatus) {
         this.employeeId = employeeId;
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.employmentStatus = employmentStatus;
     }
 
     public EmployeeId getEmployeeId() {
@@ -79,6 +83,14 @@ public class Employee implements Serializable {
         this.addressRef = addressRef;
     }
 
+    public EmploymentStatus getEmploymentStatus() {
+        return employmentStatus;
+    }
+
+    public void setEmploymentStatus(EmploymentStatus employmentStatus) {
+        this.employmentStatus = employmentStatus;
+    }
+
     public List<EmployeeAddress> getAddress() {
         return address;
     }
@@ -103,6 +115,7 @@ public class Employee implements Serializable {
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", addressRef=" + addressRef +
+                ", employmentStatus=" + employmentStatus +
                 ", address=" + address +
                 ", assignments=" + assignments +
                 '}';

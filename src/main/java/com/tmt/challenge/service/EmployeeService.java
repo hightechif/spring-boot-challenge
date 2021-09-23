@@ -17,7 +17,6 @@ import com.tmt.challenge.model.Employee;
 import com.tmt.challenge.model.EmployeeAddress;
 import com.tmt.challenge.model.composite.EmployeeId;
 import com.tmt.challenge.repository.DepartmentRepository;
-import com.tmt.challenge.repository.EmployeeAddressRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
 import com.tmt.challenge.repository.specs.EmployeeSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
@@ -42,32 +41,36 @@ public class EmployeeService {
     private final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
     private final EmployeeRepository employeeRepository;
-    private final EmployeeAddressRepository employeeAddressRepository;
     private final DepartmentRepository departmentRepository;
     private final EmployeeMapper employeeMapper;
     private final EmployeeAddressMapper employeeAddressMapper;
     private final AssignmentMapper assignmentMapper;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeAddressRepository employeeAddressRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, EmployeeAddressMapper employeeAddressMapper, AssignmentMapper assignmentMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, EmployeeAddressMapper employeeAddressMapper, AssignmentMapper assignmentMapper) {
         this.employeeRepository = employeeRepository;
-        this.employeeAddressRepository = employeeAddressRepository;
         this.departmentRepository = departmentRepository;
         this.employeeMapper = employeeMapper;
         this.employeeAddressMapper = employeeAddressMapper;
         this.assignmentMapper = assignmentMapper;
     }
 
-    // Employee Specs private method
+    /**
+     * {@code Employee Specs private method} : create an employee specification from a keyword
+     *
+     * @param keyword the first input string
+     * @param date the second input date
+     * @return return an employee specification
+     * */
     private EmployeeSpecification employeeSpecification(String keyword, Date date) {
         EmployeeSpecification employeeSpecification = new EmployeeSpecification();
         if (!keyword.equals("") && (date != null)) {
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
-        } else if (!keyword.equals("") && (date == null)) {
+        } else if (!keyword.equals("")) {
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
-        } else if (keyword.equals("") && (date != null)) {
+        } else if (date != null) {
             employeeSpecification.add(new SearchCriteria("startDate", date, SearchOperation.DATE_LESS_THAN_EQUAL, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("endDate", date, SearchOperation.DATE_GREATER_THAN_EQUAL, "assignments", null, null));
         }
@@ -75,22 +78,64 @@ public class EmployeeService {
         return employeeSpecification;
     }
 
-    // Employee 2 Specs private method
+    /**
+     * {@code Employee Specs 2 private method} : create an employee specification from a keyword between dates
+     *
+     * @param keyword the first input string
+     * @param startDate the second input date
+     * @param endDate the second input date
+     * @return return an employee specification
+     * */
     private EmployeeSpecification employeeSpecification2(String keyword, Date startDate, Date endDate) {
         EmployeeSpecification employeeSpecification = new EmployeeSpecification();
         if (!keyword.equals("") && (startDate != null) && (endDate != null)) {
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
             employeeSpecification.add(new SearchCriteria("startDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
-        } else if (!keyword.equals("") && (startDate == null || endDate == null)) {
+        } else if (!keyword.equals("")) {
             employeeSpecification.add(new SearchCriteria("title", keyword, SearchOperation.MATCH, "assignments", null, null));
-        } else if (keyword.equals("") && startDate != null || endDate != null) {
+        } else if (startDate != null || endDate != null) {
             employeeSpecification.add(new SearchCriteria("startDate", null, SearchOperation.DATE_BETWEEN, "assignments", startDate, endDate));
         }
         employeeSpecification.operator(Operator.AND);
         return employeeSpecification;
     }
 
-    // CREATE New Employee
+    /**
+     * {@code employee service get method} : GET All Employees
+     *
+     * @return return employee DTO list
+     * */
+    @Transactional(readOnly = true)
+    public List<EmployeeDTO> getAll() {
+        List<Employee> employees = employeeRepository.findAll();
+        return employeeMapper.toEmployeeDTO(employees);
+    }
+
+    /**
+     * {@code employee service get method} : GET Employee by department ID and employee ID
+     *
+     * @param departmentId the first input long
+     * @param employeeId the second input long
+     * @return return a response entity of employee DTO
+     * */
+    @Transactional(readOnly = true)
+    public EmployeeDTO get(Long departmentId, Long employeeId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
+        Optional<Employee> employeeOptional = employeeRepository.findById(new EmployeeId(department, employeeId));
+        if (employeeOptional.isEmpty()) {
+            throw new ResourceNotFoundException("employee not found");
+        }
+        Employee employee = employeeOptional.get();
+        return employeeMapper.toEmployeeDTO(employee);
+    }
+
+    /**
+     * {@code employee service create method} : CREATE New Employee
+     *
+     * @param employeeDTO the first input employee DTO
+     * @return return an employee DTO
+     * */
     public EmployeeDTO create(EmployeeDTO employeeDTO) {
         Optional<Department> employeeDepartment = departmentRepository.findById(employeeDTO.getDepartmentId());
         if (employeeDepartment.isEmpty()) {
@@ -117,7 +162,7 @@ public class EmployeeService {
         Employee employee = employeeMapper.toEmployeeEntity((employeeDTO));
 
         //Address Reference increment
-        Long employeeAddressRef = employeeRepository.findLastAddressRefNumber().orElse(0L);
+        long employeeAddressRef = employeeRepository.findLastAddressRefNumber().orElse(0L);
         employeeAddressRef += 1;
         employee.setAddressRef(employeeAddressRef);
 
@@ -137,27 +182,12 @@ public class EmployeeService {
         return response;
     }
 
-    // Get All Employee
-    @Transactional(readOnly = true)
-    public List<EmployeeDTO> getAll() {
-        List<Employee> employees = employeeRepository.findAll();
-        return employeeMapper.toEmployeeDTO(employees);
-    }
-
-    // Get Employee By ID
-    @Transactional(readOnly = true)
-    public EmployeeDTO get(Long departmentId, Long employeeId) {
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
-        Optional<Employee> employeeOptional = employeeRepository.findById(new EmployeeId(department, employeeId));
-        if (employeeOptional.isEmpty()) {
-            throw new ResourceNotFoundException("employee not found");
-        }
-        Employee employee = employeeOptional.get();
-        return employeeMapper.toEmployeeDTO(employee);
-    }
-
-    // Update an Employee
+    /**
+     * {@code employee service update method} : UPDATE employee
+     *
+     * @param employeeDTO the first input long
+     * @return return a default response DTO
+     * */
     public DefaultResponseDTO update(EmployeeDTO employeeDTO) {
         Long departmentId = employeeDTO.getDepartmentId();
         Long employeeId = employeeDTO.getEmployeeId();
@@ -170,6 +200,7 @@ public class EmployeeService {
         String email = employeeDTO.getEmail();
         String name = employeeDTO.getName();
         String phoneNumber = employeeDTO.getPhoneNumber();
+        employee.setEmploymentStatus(employeeDTO.getEmploymentStatus());
 
         List<EmployeeAddressDTO> addressDTOS = employeeDTO.getAddress();
         List<EmployeeAddress> address = employeeAddressMapper.toEmployeeAddressEntity(addressDTOS);
@@ -196,7 +227,7 @@ public class EmployeeService {
         }
         if (!Objects.equals(employee.getAddress(), address)) {
             address.forEach(x -> {
-                logger.info("New address added: { "+x.getName()+" }");
+                logger.info("New address added: { " + x.getName() + " }");
             });
             employee.getAddress().clear();
             employee.getAddress().addAll(address);
@@ -212,7 +243,13 @@ public class EmployeeService {
         return defaultResponseDTO;
     }
 
-    // Delete an Employee
+    /**
+     * {@code employee service delete method} : DELETE Employee
+     *
+     * @param departmentId the first input long
+     * @param employeeId the second input long
+     * @return return a default response DTO
+     * */
     public DefaultResponseDTO delete(Long departmentId, Long employeeId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("department id didn't exist"));
@@ -229,13 +266,28 @@ public class EmployeeService {
         return defaultResponseDTO;
     }
 
-    // SEARCH keyword
+    /**
+     * {@code employee service search method} : SEARCH all employees with specification
+     *
+     * @param keyword the keyword for filter student
+     * @param date the second input date
+     * @param pageable the pagination information
+     * @return return student DTO page
+     * */
     @Transactional(readOnly = true)
     public Page<SearchResponseDTO> search(String keyword, Date date, Pageable pageable) {
         return employeeRepository.findAll(employeeSpecification(keyword, date), pageable).map(employeeMapper::toSearchDTO);
     }
 
-    // SEARCH BETWEEN keyword
+    /**
+     * {@code employee service search between method} : SEARCH all employees between dates with specification
+     *
+     * @param keyword the keyword for filter student
+     * @param startDate the second input date
+     * @param endDate the third input date
+     * @param pageable the pagination information
+     * @return return student DTO page
+     * */
     @Transactional(readOnly = true)
     public Page<SearchResponseDTO> searchBetween(String keyword, Date startDate, Date endDate, Pageable pageable) {
         return employeeRepository.findAll(employeeSpecification2(keyword, startDate, endDate), pageable).map(employeeMapper::toSearchDTO);
