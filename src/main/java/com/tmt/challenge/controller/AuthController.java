@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,16 +47,14 @@ public class AuthController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserLoginDTO userLoginDTO) throws Exception {
 
-        Authentication authMngr = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDTO.getUsername(), userLoginDTO.getPassword()));
-
-//        refreshTokenService.deleteByUsername(userLoginDTO.getUsername());
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(userLoginDTO.getUsername());
 
         String jwtToken = jwtUtils.generateJwtToken(userDetails);     // Bearer Token
 
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
@@ -70,18 +69,10 @@ public class AuthController {
 
     @RequestMapping(value = "/refresh-token", method = RequestMethod.POST)
     public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequestDTO request) throws Exception {
-//        // From the HttpRequest get the claims
-//        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-//
-//        Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
-//
-//        String refreshToken = jwtUtils.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-//
-//        return ResponseEntity.ok(new TokenRefreshResponseDTO(refreshToken, refreshToken));
 
         String requestRefreshToken = request.getRefreshToken();
 
-        ResponseEntity<TokenRefreshResponseDTO> data = refreshTokenService.findByToken(requestRefreshToken)
+        return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
@@ -91,7 +82,6 @@ public class AuthController {
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
-        return data;
     }
 
     public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
