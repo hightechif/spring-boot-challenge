@@ -21,7 +21,7 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<DepartmentDTO>> getAll() {
         List<DepartmentDTO> departments = departmentService.getAll();
         return ResponseEntity.created(URI.create("/")).body(departments);

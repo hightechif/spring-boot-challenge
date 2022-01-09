@@ -31,7 +31,7 @@ public class StudentController {
      *
      * @return return a response entity of student DTO list
      */
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<StudentDTO>> getAll() {
         List<StudentDTO> studentDTOs = studentService.getAll();
         return new ResponseEntity<>(studentDTOs, HttpStatus.OK);

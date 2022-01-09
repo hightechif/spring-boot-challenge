@@ -60,10 +60,10 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Student Service API")
-                .description("Student Service API reference for developers")
+        return new ApiInfoBuilder().title("Spring Boot API")
+                .description("Spring Boot Challenge API reference for developers")
                 .termsOfServiceUrl("")
-                .license("Backend EDTS License")
+                .license("MIT License")
                 .licenseUrl("ridhan.fadhilah@sg-edts.com").version("1.0").build();
     }
 

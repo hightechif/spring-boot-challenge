@@ -22,7 +22,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<AccountDTO>> getAll() {
         List<AccountDTO> accountDTOS = accountService.getAll();
         return new ResponseEntity<>(accountDTOS, HttpStatus.OK);
