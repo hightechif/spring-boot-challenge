@@ -25,14 +25,20 @@ public class SpringSecurityConfiguration  extends WebSecurityConfigurerAdapter{
     /**
      * Configure HTTP Security to make use the CustomJwtAuthenticationFiler
      */
-    @Autowired
-    private CustomJwtAuthenticationFilter customJwtAuthenticationFilter;
+    private final CustomJwtAuthenticationFilter customJwtAuthenticationFilter;
 
     /**
      * Configure HTTP Security to make use the JwtAuthenticationEntryPoint
      */
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    public SpringSecurityConfiguration(
+            @Autowired CustomJwtAuthenticationFilter customJwtAuthenticationFilter,
+            @Autowired JwtAuthenticationEntryPoint unauthorizedHandler
+    ) {
+        this.customJwtAuthenticationFilter = customJwtAuthenticationFilter;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -72,13 +78,13 @@ public class SpringSecurityConfiguration  extends WebSecurityConfigurerAdapter{
                         sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-                // Add a filter to validate the tokens with every request
-                httpSecurity.addFilterBefore(customJwtAuthenticationFilter,
+        // Add a filter to validate the tokens with every request
+        httpSecurity.addFilterBefore(customJwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers( "/v2/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",

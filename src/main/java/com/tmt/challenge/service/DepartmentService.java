@@ -6,6 +6,7 @@ import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.mapper.DepartmentMapper;
 import com.tmt.challenge.model.Department;
 import com.tmt.challenge.repository.DepartmentRepository;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,9 @@ public class DepartmentService {
     private final DepartmentMapper departmentMapper;
 
     @Autowired
-    public DepartmentService(DepartmentRepository departmentRepository, DepartmentMapper departmentMapper) {
+    public DepartmentService(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
-        this.departmentMapper = departmentMapper;
+        this.departmentMapper = Mappers.getMapper(DepartmentMapper.class);
     }
 
     public DepartmentDTO create(DepartmentDTO departmentDTO) {

@@ -21,6 +21,7 @@ import com.tmt.challenge.repository.StudentRepository;
 import com.tmt.challenge.repository.specs.SearchCriteria;
 import com.tmt.challenge.repository.specs.StudentSpecification;
 import org.jetbrains.annotations.NotNull;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,12 +43,12 @@ public class StudentService {
     private final CourseMapper courseMapper;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, BookMapper bookMapper, StudentIdCardMapper studentIdCardMapper, CourseMapper courseMapper) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.studentMapper = studentMapper;
-        this.bookMapper = bookMapper;
-        this.studentIdCardMapper = studentIdCardMapper;
-        this.courseMapper = courseMapper;
+        this.studentMapper = Mappers.getMapper(StudentMapper.class);
+        this.bookMapper = Mappers.getMapper(BookMapper.class);
+        this.studentIdCardMapper = Mappers.getMapper(StudentIdCardMapper.class);
+        this.courseMapper = Mappers.getMapper(CourseMapper.class);
     }
 
     /**

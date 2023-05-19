@@ -20,6 +20,7 @@ import com.tmt.challenge.repository.DepartmentRepository;
 import com.tmt.challenge.repository.EmployeeRepository;
 import com.tmt.challenge.repository.specs.EmployeeSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
+import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,12 @@ public class EmployeeService {
     private final AssignmentMapper assignmentMapper;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, EmployeeMapper employeeMapper, EmployeeAddressMapper employeeAddressMapper, AssignmentMapper assignmentMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
-        this.employeeMapper = employeeMapper;
-        this.employeeAddressMapper = employeeAddressMapper;
-        this.assignmentMapper = assignmentMapper;
+        this.employeeMapper = Mappers.getMapper(EmployeeMapper.class);
+        this.employeeAddressMapper = Mappers.getMapper(EmployeeAddressMapper.class);
+        this.assignmentMapper = Mappers.getMapper(AssignmentMapper.class);
     }
 
     /**
@@ -226,9 +227,7 @@ public class EmployeeService {
             message = "resource updated successfully";
         }
         if (!Objects.equals(employee.getAddress(), address)) {
-            address.forEach(x -> {
-                logger.info("New address added: { " + x.getName() + " }");
-            });
+            address.forEach(x -> logger.info("New address added: { " + x.getName() + " }"));
             employee.getAddress().clear();
             employee.getAddress().addAll(address);
             message = "resource updated successfully";

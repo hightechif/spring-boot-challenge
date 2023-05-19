@@ -4,6 +4,8 @@ import com.tmt.challenge.dto.UserDTO;
 import com.tmt.challenge.mapper.UserMapper;
 import com.tmt.challenge.model.User;
 import com.tmt.challenge.repository.UserRepository;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +24,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserMapper userMapper;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder bcryptEncoder, UserMapper userMapper) {
+    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder bcryptEncoder) {
         this.userRepository = userRepository;
         this.bcryptEncoder = bcryptEncoder;
-        this.userMapper = userMapper;
+        this.userMapper = Mappers.getMapper(UserMapper.class);
     }
 
     @Override

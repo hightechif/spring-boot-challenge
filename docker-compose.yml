@@ -30,13 +30,13 @@ services:
     networks:
       - my-net
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-#      KAFKA_ADVERTISED_HOST_NAME: host.docker.internal # production
+      KAFKA_ADVERTISED_HOST_NAME: localhost # development
+#      KAFKA_ADVERTISED_HOST_NAME: host.docker.internal # run on docker
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9092 # production
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 # development
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9092 # run on docker
   java-api:
     platform: linux/x86_64
     container_name: java-api

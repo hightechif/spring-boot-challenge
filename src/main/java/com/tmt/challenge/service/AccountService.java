@@ -7,6 +7,7 @@ import com.tmt.challenge.mapper.AccountMapper;
 import com.tmt.challenge.model.Account;
 import com.tmt.challenge.model.composite.AccountId;
 import com.tmt.challenge.repository.AccountRepository;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,9 @@ public class AccountService {
     private final AccountMapper accountMapper;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
+    public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.accountMapper = accountMapper;
+        this.accountMapper = Mappers.getMapper(AccountMapper.class);
     }
 
     public AccountDTO create(AccountDTO accountDTO) {

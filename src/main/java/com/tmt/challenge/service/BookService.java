@@ -13,6 +13,7 @@ import com.tmt.challenge.repository.StudentRepository;
 import com.tmt.challenge.repository.specs.BookSpecification;
 import com.tmt.challenge.repository.specs.SearchCriteria;
 import org.jetbrains.annotations.NotNull;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,10 +31,10 @@ public class BookService {
     private final BookMapper bookMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, StudentRepository studentRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, StudentRepository studentRepository) {
         this.bookRepository = bookRepository;
         this.studentRepository = studentRepository;
-        this.bookMapper = bookMapper;
+        this.bookMapper = Mappers.getMapper(BookMapper.class);
     }
 
     /**
