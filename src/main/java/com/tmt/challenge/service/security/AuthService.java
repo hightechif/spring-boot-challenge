@@ -10,7 +10,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class AuthService {
@@ -29,7 +29,7 @@ public class AuthService {
     public String login() throws JsonProcessingException {
         logger.info("[survey service][login] LOGIN_URL: {}", LOGIN_URL);
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         String requestJson = "{\"username\": \"" + USERNAME + "\", \"password\": \"" + PWD + "\"}";

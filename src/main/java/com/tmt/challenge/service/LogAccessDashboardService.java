@@ -5,11 +5,11 @@ import com.tmt.challenge.dto.response.DefaultResponseDTO;
 import com.tmt.challenge.exception.ResourceNotFoundException;
 import com.tmt.challenge.model.LogAccessDashboard;
 import com.tmt.challenge.repository.LogAccessDashboardRepository;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -24,9 +24,9 @@ public class LogAccessDashboardService {
 
     private final Logger logger = LoggerFactory.getLogger(LogAccessDashboardService.class);
 
-    private final String LOCALHOST_IPV4 = "127.0.0.1";
-    private final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
-    private final String UNKNOWN = "unknown";
+    private static final String LOCALHOST_IPV4 = "127.0.0.1";
+    private static final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
+    private static final String UNKNOWN = "unknown";
 
     private final LogAccessDashboardRepository logAccessDashboardRepository;
 

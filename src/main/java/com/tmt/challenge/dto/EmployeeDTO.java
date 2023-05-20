@@ -2,8 +2,6 @@ package com.tmt.challenge.dto;
 
 import com.tmt.challenge.constant.enums.EmploymentStatus;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.util.List;
 
 public class EmployeeDTO {

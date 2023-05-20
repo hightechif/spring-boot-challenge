@@ -23,8 +23,12 @@ import java.util.Objects;
 @RestController
 public class TestController {
 
-    @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    public TestController(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     private static final String REGISTRATION_URL = "http://localhost:8080/register";
     private static final String AUTHENTICATION_URL = "http://localhost:8080/authenticate";

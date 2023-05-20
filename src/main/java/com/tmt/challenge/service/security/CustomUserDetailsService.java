@@ -4,7 +4,6 @@ import com.tmt.challenge.dto.UserDTO;
 import com.tmt.challenge.mapper.UserMapper;
 import com.tmt.challenge.model.User;
 import com.tmt.challenge.repository.UserRepository;
-import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

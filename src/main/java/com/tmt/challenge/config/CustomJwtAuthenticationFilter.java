@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,11 +23,15 @@ import io.jsonwebtoken.ExpiredJwtException;
 @Component
 public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private void setJwtUtils(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain chain)
             throws ServletException, IOException {
 
         try {
@@ -59,7 +64,8 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (BadCredentialsException ex) {
             request.setAttribute("exception", ex);
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println(ex.getMessage());
+            throw ex;
         }
         chain.doFilter(request, response);
     }

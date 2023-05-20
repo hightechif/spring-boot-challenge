@@ -1,6 +1,7 @@
 package com.tmt.challenge.service.kafka;
 
 import com.tmt.challenge.constant.KafkaConstant;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,10 +22,10 @@ public class KafkaSenderService {
 
     public void send(Object message) {
         ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(KafkaConstant.USER, message);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+        future.addCallback(new ListenableFutureCallback<>() {
 
             @Override
-            public void onFailure(Throwable ex) {
+            public void onFailure(@NotNull Throwable ex) {
                 logger.error("unable to send message=[" + message + "] due to : " + ex.getMessage());
             }
 

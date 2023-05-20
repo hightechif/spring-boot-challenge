@@ -4,24 +4,24 @@ import java.util.Date;
 
 public class ErrorMessage {
 
-    private Integer HttpStatus;
+    private Integer httpStatus;
     private Date date;
     private String message;
     private String description;
 
     public ErrorMessage(Integer httpStatus, Date date, String message, String description) {
-        HttpStatus = httpStatus;
+        this.httpStatus = httpStatus;
         this.date = date;
         this.message = message;
         this.description = description;
     }
 
     public Integer getHttpStatus() {
-        return HttpStatus;
+        return httpStatus;
     }
 
     public void setHttpStatus(Integer httpStatus) {
-        HttpStatus = httpStatus;
+        this.httpStatus = httpStatus;
     }
 
     public Date getDate() {

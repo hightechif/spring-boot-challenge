@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class LogAccessScheduler {
@@ -37,7 +37,7 @@ public class LogAccessScheduler {
         logger.info("[survey service][clean log] accessToken: {}", this.accessToken);
         if (this.accessToken != null) {
             HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + this.accessToken);
             HttpEntity<String> entity = new HttpEntity<>(headers);
